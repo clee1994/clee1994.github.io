@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Clemens Schafer"
+title: Clemens Schafer
 date: 2014-04-30
 ---
 
