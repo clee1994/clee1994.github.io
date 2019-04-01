@@ -6,7 +6,7 @@ title: Clemens Schafer
 	<!-- https://jekyllrb.com/docs/pagination/-->
 <center>
 <img class="img-circle avatar" alt="Clemens Schafer" src="img/me.png">
-<h1>Clemens Schafer</h1>
+<div class="hC">Clemens Schafer</div>
 <p>CSE PhD student at University of Notre Dame</p>
 <p>cschaef6 [at] nd.edu</p>
 </center>
@@ -28,7 +28,7 @@ title: Clemens Schafer
 
 	{% for post in site.posts %}
 		<hr>
-	    <p>{{ post.date | date_to_string }}</p>
+	    <div class="dateC">{{ post.date | date_to_string }}</div>
 	    {{ post.content }}
 	{% endfor %}
 

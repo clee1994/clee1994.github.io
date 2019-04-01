@@ -10,8 +10,8 @@ nav ul, footer ul {
 }
 .avatar {
   vertical-align: middle;
-  width: 150px;
-  height: 150px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
 }
 nav ul li, footer ul li {
@@ -25,20 +25,31 @@ a {
 a:hover {
     text-decoration: underline;
 }
-h1 {
+.hC {
     font-size: 3em;
     font-family:'Helvetica', 'Arial', 'Sans-Serif';
 }
-p {
+.dateC {
+    font-size: 0.7em;
+    font-family:'Helvetica', 'Arial', 'Sans-Serif';
+}
+h1 {
+    font-size: 2em;
+    font-family:'Helvetica', 'Arial', 'Sans-Serif';
+}
+h2 {
+    font-size: 1.75em;
+    font-family:'Helvetica', 'Arial', 'Sans-Serif';
+}
+h3 {
     font-size: 1.5em;
-    line-height: 1.4em;
+    font-family:'Helvetica', 'Arial', 'Sans-Serif';
+}
+p {
+    font-size: 1.25em;
+    line-height: 1.3em;
     color: #333;
 }
-footer {
-    border-top: 1px solid #d5d5d5;
-    font-size: .8em;
-}
-
 ul.posts { 
     margin: 20px auto 40px; 
     font-size: 1.5em;
