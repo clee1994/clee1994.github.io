@@ -4,9 +4,9 @@ title: Clemens Schafer
 date: 2014-04-30
 ---
 
-#Installing SQLite on MacOS
+# Installing SQLite on MacOS
 
-##Open the Terminal
+## Open the Terminal
 
 First of all, we need to open the MacOS terminal and then navigate to our working directory. The easiest way to open the terminal is to press
 <kbd>cmd</kbd> + <kbd>space</kbd> (simultaneously, and a Spotlight search field where you can type into should open), type "Terminal" and when the the Terminal application is selected press <kbd>Enter</kbd>. Alternatively, you can find the Terminal in your Applications folder and just double click it there. In order to navigate to our working dir, we first need to find out what the path of our working directory is (those cryptic paths you have used in python before). 
@@ -21,7 +21,7 @@ To do so you can either use the Finder and navigate to your prefered working dir
 cd /Users/clemens/Documents
 ~~~
 
-##Rescources
+## Rescources
 
 - [https://anaconda.org/anaconda/sqlite](https://anaconda.org/anaconda/sqlite)
 - [https://www.sqlite.org/index.html](https://www.sqlite.org/index.html)

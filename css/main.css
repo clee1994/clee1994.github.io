@@ -8,6 +8,12 @@ nav ul, footer ul {
     list-style: none;
     font-weight: bold;
 }
+.avatar {
+  vertical-align: middle;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
 nav ul li, footer ul li {
     display: inline;
     margin-right: 20px;
