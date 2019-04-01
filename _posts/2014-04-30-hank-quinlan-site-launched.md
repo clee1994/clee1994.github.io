@@ -21,37 +21,6 @@ To do so you can either use the Finder and navigate to your prefered working dir
 cd /Users/clemens/Documents
 ~~~
 
-This will change the directory (cd) to the path you gave it.
-
-##Setup a Virtual Environment
-It is highly recommended to work with virtual environments when working with python packages (for more details see [https://docs.python.org/3/tutorial/venv.html](https://docs.python.org/3/tutorial/venv.html)). Given we are in our working directory we can set up a virtual environment very easy by executing the following commands in the Terminal:
-
-~~~
-conda create -n SP19CSE10102 python=3.5 anaconda
-~~~
-
-This command may take a while (in case it asks you to proceed, just type <kbd>y</kbd> and press <kbd>Enter</kbd>) but when it successfully ran one time we do not need to execute it again, because our virtual environment with the name SP19CSE10102 is created now. Now we have to activate our virtual environment to work in it. This is done by the following command:
-
-~~~
-source activate SP19CSE10102
-~~~
-
-In case you are done working in your environment or you want to change to another environment you need to exit the environment, this is done with the following command:
-
-~~~
-source deactivate
-~~~
-
-##Install SQLite
-Given that we are in our python environment and in the right directory we can now install SQLite which we will need for the course, this is done by the following command:
-
-~~~
-conda install -n SP19CSE10102 sqlite
-~~~
-
-(in case it asks you to proceed, just type <kbd>y</kbd> and press <kbd>Enter</kbd>)
-
-
 ##Rescources
 
 - [https://anaconda.org/anaconda/sqlite](https://anaconda.org/anaconda/sqlite)
