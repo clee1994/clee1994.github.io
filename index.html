@@ -2,44 +2,16 @@
 layout: default
 title: Clemens Schafer
 ---
-<!--<div class="blurb">-->
 	<!-- https://jekyllrb.com/docs/pagination/-->
 <center>
-<img class="img-circle avatar" alt="Clemens Schafer" src="img/me.png">
+<img class="img-circle avatar" alt="Clemens Schafer" src="img/me.jpg">
 <div class="hC">Clemens Schafer</div>
 <p>CSE PhD student at University of Notre Dame</p>
 <p>cschaef6 [at] nd.edu</p>
 </center>
-<!--
-	<div class="row marketing">
-	<div class="col-sm-4">
-	<img  class="img-circle avatar" alt="Clemens Schafer" src="img/me.png">
-	</div>
-	<div itemscope itemtype="http://data-vocabulary.org/Person" class="col-sm-8">
-	<p class="lead">Hi, I'm <span itemprop="name">Jonathan McGlone</span> and I make things on the web for academic libraries and scholarly publishers.</p>
-	<p>I get by as a <span itemprop="title">librarian</span>, <span itemprop="title">front end developer</span>, <span itemprop="title">UI designer</span>, <span itemprop="title">digital publisher</span>, and music enthusiast living in <span itemprop="address" itemscope
-    itemtype="http://data-vocabulary.org/Address"> <span itemprop="locality">Plymouth</span>, <span itemprop="region">Michigan</span></span> and working for <a href="http://www.publishing.umich.edu">Michigan Publishing</a> at <span itemprop="affiliation">the <a href="http://www.lib.umich.edu">University of Michigan Library</a></span>.</p>
-	
-	<p>I'm also available for hire as a <span itemprop="title">freelance web developer, designer, or consultant</span>. <a href="contact">Drop me a line</a> about your project if you're interested in working with me.</p>
-	</div>
-</div>
--->
-
 
 	{% for post in site.posts %}
 		<hr>
 	    <div class="dateC">{{ post.date | date_to_string }}</div>
 	    {{ post.content }}
 	{% endfor %}
-
-	<!--<h1>Hi there, I'm Hank Quinlan!</h1>
-	<p>I'm best known as the horrible cop from <em>A Touch of Evil</em> Don't trust me. <a href="/about">Read more about my life...</a></p>
-
-	<ul class="posts">
-	  {% for post in site.posts %}
-	    <li><span>{{ post.date | date_to_string }}</span>
-	    <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
-	    {{ post.content }}
-	  {% endfor %} 
-	</ul> -->
-<!--</div> /.blurb -->

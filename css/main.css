@@ -10,9 +10,10 @@ nav ul, footer ul {
 }
 .avatar {
   vertical-align: middle;
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
+  margin-bottom: 10px;
 }
 nav ul li, footer ul li {
     display: inline;
