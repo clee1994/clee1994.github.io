@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-My name is Clemens JS Schaefer and I am a 3rd year PhD student in Computer Science and Engineering at the University of Notre Dame. My doctoral advisor is[Dr Siddharth Joshi](https://siddharth-joshi.com/).
+My name is Clemens JS Schaefer and I am a 3rd year PhD student in Computer Science and Engineering at the University of Notre Dame. My doctoral advisor is [Dr Siddharth Joshi](https://siddharth-joshi.com/).
 
 My research interests focus on brain-inspired computing. Especially applying findings from neuroscience to topics in machine learning, this ranges from using biologically plausible spiking dynamics on a single neuron level to stochasticity in synapsis to hyperdimensional computing. The overall goal is to find new ways for computers to learn more efficiently. In the future, my goal is to partake in the development of cutting-edge brain-inspired computing hardware and algorithms. 
 
