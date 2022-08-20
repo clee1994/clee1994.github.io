@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-My name is Clemens JS Schaefer and I am a 5th year PhD student in Computer Science and Engineering at the University of Notre Dame. My doctoral advisor is [Dr Siddharth Joshi](https://siddharth-joshi.com/). The last two summers (2021 and 2022) I interned at Google LLC in Core ML team and the ASML team both times working on quantization.
+My name is Clemens JS Schaefer and I am a 5th year PhD student in Computer Science and Engineering at the University of Notre Dame. My doctoral advisor is [Dr Siddharth Joshi](https://siddharth-joshi.com/). The last two summers (2021 and 2022) I interned at Google LLC in the Core ML team and the ASML team both times working on quantization.
 
 My research interest focuses on quantization of deep neural networks and brain-inspired computing. In particular on enhancing the energy-efficiency of training and deploying neural network (NN) models using hardware aware quantization as well neuroscience-inspired algorithms (e.g. spiking neural networks). 
 
