@@ -1,10 +1,10 @@
 ---
-permalink: /quant_speed
-title: "Speeding Up Neural Networks with Quantization"
-excerpt: "Motivating Quantization with Numbers from the A100 executing NNs with int4, int8, and fp16"
+layout: archive
+title: "Quantization Speed Up"
+permalink: /quant_speed/
 author_profile: true
-redirect_from: 
-  - /quant_speed/
+redirect_from:
+  - /quant_speed
   - /quant_speed.html
 ---
 
