@@ -74,7 +74,7 @@ pycutlass.GemmOperationUniversal(
 Assuming a simple 6 layer fully connected neural network (activation dimension as 32768-16384-8192-4096-2048-1024-32768) we can now run it with different supported bit-widths of the A100 (fp16, int8, and int4). The figure below shows us the latency in seconds of a single NN forward pass. We can see a ~31% and ~47% reduction in latency for int8 and int4 respectively compared to the fp16 model. Unsurprisingly we get some latency gains by using fewer bits for the matrix operations in our simple NN.
 
 <p align="center">
-<img src="pure.png"  width="600">
+<img src="https://clemens-schafer.com/_pages/pure.png"  width="600">
 </p>
 
 ### Can we have finer trade-off?
@@ -82,7 +82,7 @@ Assuming a simple 6 layer fully connected neural network (activation dimension a
 The latency improvements we have seen so far are all or nothing, either we run the entire NN at 8, 4, or 16 bits. Hence, we also only have two options for improvement and in case the NN is not able to produce the desired accuracy with only 4 or 8 bits there isn’t much we can do. Lucky us we can configure the bit precision per layer. We can achieve a lot finer trade-off between model size/latency and “performance” when we consider all the configuration options given customizable bit-widths per NN layer. The quantization configuration space given our tiny NN is indeed very big 3^6 = 729 (3 bit-widths and 6 layers). In the figure below we visualize the latency of all those configurations against the “representational capacity” of the NN (the activation dimension times their respective bit-width added up). We can see a pareto frontier forming which gives us the best latency for a given representational capacity and we can indeed see that most configuration do not lie on that curve and are sometimes not even close. For example, the red double headed arrow highlights the difference between two points with the exact same representational capacity but ~39% difference in latency! 
 
 <p align="center">
-<img src="hetero.png"  width="600">
+<img src="https://clemens-schafer.com/_pages/hetero.png"  width="600">
 </p>
 
 ### I want to know more!
