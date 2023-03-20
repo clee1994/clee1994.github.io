@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "Quantization Speed Up"
+title: "Speeding Up Neural Networks with Quantization"
 permalink: /quant_speed/
 author_profile: true
 redirect_from:
@@ -8,7 +8,6 @@ redirect_from:
   - /quant_speed.html
 ---
 
-# Speeding Up Neural Networks with Quantization
 
 ### Why do we need machine learning acceleration?
 
