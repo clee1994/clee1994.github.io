@@ -14,4 +14,4 @@ My research interest focuses on quantization of deep neural networks and brain-i
 
 I obtained an undergrad degree in Business Administration (specialisation in Economics) from the [Catholic University Eichstätt-Ingolstadt](https://www.ku.de/en/faculty-of-business-administration-wfi/) and a Masters in Computational Finance from the [University College London](https://www.ucl.ac.uk/), during that time I was a scholarship holder of the [Friedrich Naumann Foundation for Freedom](https://www.freiheit.org/). For more details refer to my [CV](files/CV.pdf).
 
-Also, check out [this blog post](http://clemens-schafer.com/quant_speed/) to learn more about my quantization research and its relevance.
+Also, check out [this blog post](https://clemens-schafer.com/quant_speed/) to learn more about my quantization research and its relevance.
