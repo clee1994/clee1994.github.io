@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speeding Up Neural Networks with Quantization - Clemens JS Schaefer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <script src="nav.js"></script>
+
+  <div class="name-row">
+    <h1>Blog</h1>
+  </div>
+
+  <section style="margin-top: 20px;">
+    <h2>Speeding Up Neural Networks with Quantization</h2>
+    <p style="color: #b4b4b0; font-size: 0.8125rem; margin-bottom: 24px;">Blog Post</p>
+    
+    <div class="bio">
+      <h2>Why do we need machine learning acceleration?</h2>
+      <p>As artificial intelligence (AI), particularly machine learning (ML), continues to advance rapidly, the demand for efficient processing of large datasets and models has become increasingly critical. Especially the ability to quickly and efficiently process neural network (NN) has become an essential factor in achieving high performance in applications such as image recognition (<a href="https://arxiv.org/abs/2010.11929" class="text-link">Vision Transformers</a>), natural language processing (<a href="https://arxiv.org/abs/1810.04805" class="text-link">Bert</a>), generative AI (<a href="https://arxiv.org/abs/2112.10752" class="text-link">stable diffusion</a> and <a href="https://arxiv.org/pdf/2005.14165.pdf" class="text-link">GPT</a>), and robotics(e.g. <a href="https://www.ri.cmu.edu/pub_files/2013/7/Kober_IJRR_2013.pdf" class="text-link">reinforcement learning</a>). The main driver for scaling ML systems so far has been better hardware accelerators such as GPUs or TPUs which specialized in matrix operation. Those systems got better amongst other factors through smaller technology nodes provided by foundries. For example, for data center GPUs NVIDIA used 90nm node for their Tesla architecture in 2007 meanwhile in their 2022 Hopper architecture is fabricated using a 4nm FinFET process. Since scaling technology nodes is likely to slow down (end of Moore’s law, got predicted many times but eventually it has to be true, no?) but demand for ML acceleration is likely to increase even further other ways for ML acceleration will come into play.</p>
+      <br>
+      <h2>What is quantization?</h2>
+      <p>Enter quantization a technique originally from signal processing which maps a large set (possibly even continuous) of values to a smaller set of values. The idea thereby being that a smaller set of values requires fewer bits for digital representation and hence cheaper hardware primitives can be used and memory as well as bandwidth requirements are reduced. Thereby resulting in lower latencies or lower energy requirements enabling deployment in resource constraint environments. Quantization is especially interesting for neural networks since they demonstrate robustness towards noise and in some case even benefit from it as <a href="https://proceedings.neurips.cc/paper/2017/file/217e342fc01668b10cb1188d40d3370e-Paper.pdf" class="text-link">regularization method</a>. There has been a plethora of work on how to quantize NNs in various ways, i.e. post-training quantization (PTQ) or quantization aware training (QAT), see this <a href="https://arxiv.org/pdf/2004.09602.pdf" class="text-link">NVIDIA</a> or <a href="https://arxiv.org/pdf/2106.08295.pdf" class="text-link">QUALCOMM</a> white paper for in depth explanations. However, one common criticism authors of such works (including myself) are facing regularly is the applicability of quantization to production settings. In this blog post I want to make the case for how quantization is already relevant and can be used with modern GPU systems.</p>
+      <br>
+      <h2>Where does quantization stand today?</h2>
+      <p>Practically speaking the most used precision for NN today are 16bit floating point formats, either as Google’s BFloat16 (which has an optimized mantissa-exponent bit distribution for NNs) or standard IEEE fp16. Which in case of PyTorch are conveniently provided through the <a href="https://pytorch.org/docs/stable/amp.html" class="text-link">AMP</a> package and are supported by most modern ML systems and usually forms the baseline for quantization works which explore bit-widths below 16bits. Unfortunately, In the low-bit width regime there is only limited support for end users. A common argument is that quantization research wants to inform future hardware design or is meant for custom ASIC designs thereby rendering it irrelevant for ML practitioner. However, with <a href="https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/" class="text-link">NVIDIA’s release</a> of the ampere architecture (used for example in the A100 GPU) there is hardware support for 4bit and 8bit operation matrix operations bring low bit quantization in the reach of users! The actual use of 4 bit operations is still a little tedious since no major deep learning framework supports int4 operations.</p>
+      <br>
+      <h2>How can I use low bit-width operations?</h2>
+      <p>Let’s have a look at the actual speed ups we can achieve by using lower precision operations on the A100. To do so we are going to use <a href="https://github.com/NVIDIA/cutlass/tree/master/examples/40_cutlass_py" class="text-link">PyCutlass interface</a> (a little bit hidden in the cutlass repository) which allows us to run custom cutlass kernel for matrix operations on the GPU (e.g. calling reduced precision operations). The following code demonstrates the setup of int8 multiply accumulate operation. We set up two input matrices with 8 bits and an output matrix with 32 bits (high precision accumulators), keeping track of all details such as thread block shape, number of warps within dimension etc. is not trivial and can be area for optimization (keep in mind that the hardware must support the operation you are trying construct here). Finally, there are some options for the epilogue where activations functions or batch normalization operations could be implemented.</p>
+      <br>
+      <pre style="background: #f1f1ef; padding: 12px; border-radius: 4px; overflow-x: auto; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem;">
+alignment = 8
+# Set up A, B, C and accumulator
+tensor_a = pycutlass.TensorDescription(
+  cutlass.int8, cutlass.RowMajor, alignment
+)
+tensor_b = pycutlass.TensorDescription(
+  cutlass.int8, cutlass.ColumnMajor, alignment
+)
+tensor_c = pycutlass.TensorDescription(
+  cutlass.int32, cutlass.RowMajor, alignment
+)
+problem_size = cutlass.gemm.GemmCoord(
+        FLAGS.batch_size, FLAGS.nn_size[i + 1], FLAGS.nn_size[i]
+    )
+# ... see full code for details
+      </pre>
+      <br>
+      <h2>How much speed up can we get?</h2>
+      <p>Assuming a simple 6 layer fully connected neural network (activation dimension as 32768-16384-8192-4096-2048-1024-32768) we can now run it with different supported bit-widths of the A100 (fp16, int8, and int4). The figure below shows us the latency in seconds of a single NN forward pass. We can see a ~31% and ~47% reduction in latency for int8 and int4 respectively compared to the fp16 model. Unsurprisingly we get some latency gains by using fewer bits for the matrix operations in our simple NN.</p>
+      <br>
+      <p align="center">
+        <img src="https://clemens-schafer.com/_pages/pure.png" width="100%" style="max-width: 600px; border-radius: 4px;">
+      </p>
+      <br>
+      <h2>Can we have finer trade-off?</h2>
+      <p>The latency improvements we have seen so far are all or nothing, either we run the entire NN at 8, 4, or 16 bits. Hence, we also only have two options for improvement and in case the NN is not able to produce the desired accuracy with only 4 or 8 bits there isn’t much we can do. Lucky us we can configure the bit precision per layer. We can achieve a lot finer trade-off between model size/latency and “performance” when we consider all the configuration options given customizable bit-widths per NN layer. The quantization configuration space given our tiny NN is indeed very big 3^6 = 729 (3 bit-widths and 6 layers). In the figure below we visualize the latency of all those configurations against the “representational capacity” of the NN (the activation dimension times their respective bit-width added up). We can see a pareto frontier forming which gives us the best latency for a given representational capacity and we can indeed see that most configuration do not lie on that curve and are sometimes not even close. For example, the red double headed arrow highlights the difference between two points with the exact same representational capacity but ~39% difference in latency!</p>
+      <br>
+      <p align="center">
+        <img src="https://clemens-schafer.com/_pages/hetero.png" width="100%" style="max-width: 600px; border-radius: 4px;">
+      </p>
+      <br>
+      <h2>I want to know more!</h2>
+      <p>Given this big space of quantization configuration with different latencies and representational capacities parts the real challenge becomes how do we trade-off quantization and model performance. In this blog post we use representational capacity without linking it to any practical NN performance in terms of accuracy or generative power metric. This is mainly because this relationship is not straight forward, but it can be exploited with clever methods which I work on in my PhD research. If you are interested, you can have a look at two representative papers of my work:</p>
+      <ol style="margin-left: 20px; margin-bottom: 24px;">
+        <li><a href="https://arxiv.org/pdf/2206.07741" class="text-link">Edge Inference with Fully Differentiable Quantized Mixed Precision Neural Networks</a></li>
+        <li><a href="https://arxiv.org/pdf/2302.01382" class="text-link">Mixed Precision Post Training Quantization of Neural Networks with Sensitivity Guided Search</a></li>
+      </ol>
+      <p>I hope in this blog post I was able to motivate why quantization work is interesting and show how it can have real production impact already.</p>
+    </div>
+  </section>
+
+</body>
+</html>
