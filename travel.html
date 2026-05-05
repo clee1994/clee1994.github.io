@@ -24,13 +24,8 @@
     .map-container svg polygon {
       fill: #f1f1ef;
       stroke: #fff;
-      stroke-width: 0.4;
+      stroke-width: 0.3;
       transition: fill 0.2s ease;
-    }
-    /* US map specific border crispness adjustment */
-    #us-map svg path {
-      stroke: #fff;
-      stroke-width: 1.5;
     }
     .map-container svg .visited {
       fill: #37352f;
@@ -90,7 +85,7 @@
     .country-grid span:hover { color: #37352f; }
     
     hr.section-divider {
-      margin-top: 64px;
+      margin-top: 48px;
       border: 0;
       border-top: 1px solid #f1f1ef;
     }
@@ -99,35 +94,30 @@
 <body>
   <script src="nav.js"></script>
 
-  <!-- World Section -->
+  <!-- Master Single Map Canvas Grid -->
   <h1>Travel</h1>
 
   <div class="map-wrap">
     <div class="map-container" id="map"></div>
+    <div class="map-tooltip" id="tooltip"></div>
   </div>
 
+  <!-- Countries Stats & Grid Checklist -->
   <div class="travel-stat" id="stat"></div>
-
-  <section class="country-section">
-    <h2>Countries</h2>
+  <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="countries"></div>
   </section>
 
   <hr class="section-divider" />
 
-  <!-- US States Section -->
-  <div class="travel-stat" id="us-stat" style="margin-top: 40px;"></div>
-
-  <section class="country-section" style="margin-top: 24px;">
-    <h2>States Visited</h2>
+  <!-- US States Stats & Grid Checklist -->
+  <div class="travel-stat" id="us-stat" style="margin-top: 32px;"></div>
+  <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="states-list"></div>
   </section>
 
-  <!-- Global Shared Tooltip Element -->
-  <div class="map-tooltip" id="global-tooltip"></div>
-
   <script>
-    // Reconciled Country Array History
+    // Complete International Reconciled Country Array History
     const visited = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
@@ -161,7 +151,7 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Explicit US States History Breakdown
+    // Custom Explicit US State Visit History Breakdown
     const visitedStates = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
@@ -181,35 +171,40 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Alphabetize lists
+    // Sort strings alphabetized
     visited.sort((a, b) => a.name.localeCompare(b.name));
     visitedStates.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Render Metrics Stats Counters
+    // Update Stat Value String Labels
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
     document.getElementById('us-stat').innerHTML =
       `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
 
-    // Populate Text Layout Grids
+    // Populate Layout Grids
     document.getElementById('countries').innerHTML = visited
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
     document.getElementById('states-list').innerHTML = visitedStates
       .map(s => `<span>${s.name} (${s.year})</span>`).join('');
 
-    // Shared Tooltip Pointer Reference
-    const tip = document.getElementById('global-tooltip');
+    // Single Map Container Target
+    const mapContainer = document.getElementById('map');
+    const tooltip = document.getElementById('tooltip');
 
-    // 1. Render World Map SVG
-    const worldMapContainer = document.getElementById('map');
+    // Fetch & Process High Fidelity Map Asset
     fetch('world-map.svg')
       .then(r => r.text())
       .then(svg => {
-        worldMapContainer.innerHTML = svg;
+        mapContainer.innerHTML = svg + '<div class="map-tooltip" id="tooltip"></div>';
+        const tip = document.getElementById('tooltip');
 
+        // 1. Highlight Reconciled Countries (Except general US solid filling landmass)
         visited.forEach(({ code, name }) => {
-          const el = worldMapContainer.querySelector(`#${code}`);
+          if (code.toLowerCase() === 'us') return; // Defer to granular states vector path shading lookups
+          
+          const el = mapContainer.querySelector(`#${code.toUpperCase()}`);
           if (!el) return;
+
           if (el.tagName === 'g') {
             el.querySelectorAll('path, polygon').forEach(p => {
               p.classList.add('visited');
@@ -220,23 +215,32 @@
             el.dataset.label = name;
           }
         });
+
+        // 2. Highlight Explicit USA States paths inside the main World Canvas
+        visitedStates.forEach(({ code, name }) => {
+          const el = mapContainer.querySelector(`.${code.toLowerCase()}`);
+          if (!el) return;
+          el.classList.add('visited');
+          el.dataset.label = `USA - ${name}`;
+        });
+
+        // Add Unified Mouse Listeners for Interaction Canvas tooltips
+        mapContainer.addEventListener('mousemove', e => {
+          const target = e.target.closest('.visited');
+          if (target && target.dataset.label) {
+            tip.textContent = target.dataset.label;
+            tip.classList.add('visible');
+            tip.style.left = e.clientX + 12 + 'px';
+            tip.style.top = e.clientY - 28 + 'px';
+          } else {
+            tip.classList.remove('visible');
+          }
+        });
+
+        mapContainer.addEventListener('mouseleave', () => {
+          tip.classList.remove('visible');
+        });
       });
-
-    // Universal Tooltip Interactive Event Bus Handler
-    function handleMapHover(e) {
-      const target = e.target.closest('.visited');
-      if (target && target.dataset.label) {
-        tip.textContent = target.dataset.label;
-        tip.classList.add('visible');
-        tip.style.left = e.clientX + 12 + 'px';
-        tip.style.top = e.clientY - 28 + 'px';
-      } else {
-        tip.classList.remove('visible');
-      }
-    }
-
-    worldMapContainer.addEventListener('mousemove', handleMapHover);
-    worldMapContainer.addEventListener('mouseleave', () => tip.classList.remove('visible'));
   </script>
 </body>
 </html>
