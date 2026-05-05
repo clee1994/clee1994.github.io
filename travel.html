@@ -116,9 +116,7 @@
   <hr class="section-divider" />
 
   <!-- US States Section -->
-  <h1 style="margin-top: 40px;">US States</h1>
-
-  <div class="travel-stat" id="us-stat"></div>
+  <div class="travel-stat" id="us-stat" style="margin-top: 40px;"></div>
 
   <section class="country-section" style="margin-top: 24px;">
     <h2>States Visited</h2>
@@ -191,7 +189,7 @@
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
     document.getElementById('us-stat').innerHTML =
-      `<span class="num">${visitedStates.length}</span><span class="label">states visited</span>`;
+      `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
 
     // Populate Text Layout Grids
     document.getElementById('countries').innerHTML = visited
