@@ -20,36 +20,35 @@
       height: auto;
       display: block;
     }
-    /* Override map default coloring to match aesthetic */
     .map-container svg path,
     .map-container svg polygon,
     .map-container svg g {
       transition: fill 0.2s ease;
     }
     
-    /* Unvisited default land style */
-    .map-container svg .landxx,
-    .map-container svg .coastxx,
+    /* Unvisited default land style styling universal path tags */
     .map-container svg path,
     .map-container svg polygon {
       fill: #f1f1ef !important;
       stroke: #ffffff !important;
-      stroke-width: 0.4;
+      stroke-width: 0.5 !important;
     }
     
-    /* Oceans stay clean white */
+    /* Oceans stay clean white background */
     .map-container svg .oceanxx,
     .map-container svg #ocean {
       fill: #ffffff !important;
       stroke: none !important;
     }
 
-    /* Visited country and state fills */
-    .map-container svg .visited {
+    /* Highly specific path matching for visited items to override universal selectors */
+    .map-container svg path.visited,
+    .map-container svg polygon.visited {
       fill: #37352f !important;
       cursor: pointer;
     }
-    .map-container svg .visited:hover {
+    .map-container svg path.visited:hover,
+    .map-container svg polygon.visited:hover {
       fill: #787774 !important;
     }
 
@@ -126,7 +125,7 @@
   </section>
 
   <script>
-    // Complete International Reconciled Country Array History
+    // Complete Reconciled Travel Datasets History
     const visited = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
@@ -160,7 +159,7 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Custom Explicit US State Visit History Breakdown
+    // Explicit Visited US State Lists Breakdown
     const visitedStates = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
@@ -180,33 +179,40 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Sort strings alphabetized
+    // Sort arrays alphabetized
     visited.sort((a, b) => a.name.localeCompare(b.name));
     visitedStates.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Update Stat Value String Labels
+    // Print counts metric values
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
     document.getElementById('us-stat').innerHTML =
       `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
 
-    // Populate Layout Grids
+    // Render layouts grid blocks
     document.getElementById('countries').innerHTML = visited
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
     document.getElementById('states-list').innerHTML = visitedStates
       .map(s => `<span>${s.name} (${s.year})</span>`).join('');
 
-    // Map Container Target
+    // Container select target elements
     const mapContainer = document.getElementById('map');
 
-    // Fetch & Process Reconciled Subdivisions Map Asset
+    // Load high fidelity subdivisions vector map layout
     fetch('world-map.svg')
       .then(r => r.text())
       .then(svg => {
         mapContainer.innerHTML = svg + '<div class="map-tooltip" id="tooltip"></div>';
         const tip = document.getElementById('tooltip');
+        
+        // Distort/Zoom Map dynamically by adjusting the viewBox boundary height 
+        // to completely crop out Antarctica and enlarge visible lands
+        const svgEl = mapContainer.querySelector('svg');
+        if (svgEl) {
+          svgEl.setAttribute('viewBox', '82.992 45.607 2528.5721 1040');
+        }
 
-        // 1. Highlight Visited Countries (Pruning group skip for US to handle custom state selectors instead)
+        // 1. Paint Reconciled Country shapes (skiping general solid US group fill)
         visited.forEach(({ code, name }) => {
           if (code.toLowerCase() === 'us') return;
           
@@ -224,7 +230,7 @@
           }
         });
 
-        // 2. Highlight Explicit USA States paths using id="us-xx" tags
+        // 2. Paint Explicit visited US States via custom specific path target matching
         visitedStates.forEach(({ code, name }) => {
           const el = mapContainer.querySelector(`#us-${code.toLowerCase()}`);
           if (!el) return;
@@ -232,7 +238,7 @@
           el.dataset.label = `USA - ${name}`;
         });
 
-        // Interaction Tooltips Setup listeners
+        // Unified Tooltip listener logic matching mouse coordinates
         mapContainer.addEventListener('mousemove', e => {
           const target = e.target.closest('.visited');
           if (target && target.dataset.label) {
