@@ -118,10 +118,6 @@
   <!-- US States Section -->
   <h1 style="margin-top: 40px;">US States</h1>
 
-  <div class="map-wrap">
-    <div class="map-container" id="us-map"></div>
-  </div>
-
   <div class="travel-stat" id="us-stat"></div>
 
   <section class="country-section" style="margin-top: 24px;">
@@ -228,21 +224,6 @@
         });
       });
 
-    // 2. Render US States Map SVG
-    const usMapContainer = document.getElementById('us-map');
-    fetch('usa-states-map.svg')
-      .then(r => r.text())
-      .then(svg => {
-        usMapContainer.innerHTML = svg;
-
-        visitedStates.forEach(({ code, name }) => {
-          const el = usMapContainer.querySelector(`.${code}`);
-          if (!el) return;
-          el.classList.add('visited');
-          el.dataset.label = name;
-        });
-      });
-
     // Universal Tooltip Interactive Event Bus Handler
     function handleMapHover(e) {
       const target = e.target.closest('.visited');
@@ -256,10 +237,8 @@
       }
     }
 
-    [worldMapContainer, usMapContainer].forEach(container => {
-      container.addEventListener('mousemove', handleMapHover);
-      container.addEventListener('mouseleave', () => tip.classList.remove('visible'));
-    });
+    worldMapContainer.addEventListener('mousemove', handleMapHover);
+    worldMapContainer.addEventListener('mouseleave', () => tip.classList.remove('visible'));
   </script>
 </body>
 </html>
