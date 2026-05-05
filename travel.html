@@ -27,6 +27,11 @@
       stroke-width: 0.4;
       transition: fill 0.2s ease;
     }
+    /* US map specific border crispness adjustment */
+    #us-map svg path {
+      stroke: #fff;
+      stroke-width: 1.5;
+    }
     .map-container svg .visited {
       fill: #37352f;
       cursor: pointer;
@@ -83,16 +88,22 @@
     .country-grid span:nth-child(odd) { padding-right: 12px; }
     .country-grid span:nth-child(even) { padding-left: 12px; }
     .country-grid span:hover { color: #37352f; }
+    
+    hr.section-divider {
+      margin-top: 64px;
+      border: 0;
+      border-top: 1px solid #f1f1ef;
+    }
   </style>
 </head>
 <body>
   <script src="nav.js"></script>
 
+  <!-- World Section -->
   <h1>Travel</h1>
 
   <div class="map-wrap">
     <div class="map-container" id="map"></div>
-    <div class="map-tooltip" id="tooltip"></div>
   </div>
 
   <div class="travel-stat" id="stat"></div>
@@ -102,9 +113,27 @@
     <div class="country-grid" id="countries"></div>
   </section>
 
+  <hr class="section-divider" />
+
+  <!-- US States Section -->
+  <h1 style="margin-top: 40px;">US States</h1>
+
+  <div class="map-wrap">
+    <div class="map-container" id="us-map"></div>
+  </div>
+
+  <div class="travel-stat" id="us-stat"></div>
+
+  <section class="country-section" style="margin-top: 24px;">
+    <h2>States Visited</h2>
+    <div class="country-grid" id="states-list"></div>
+  </section>
+
+  <!-- Global Shared Tooltip Element -->
+  <div class="map-tooltip" id="global-tooltip"></div>
+
   <script>
-    // Edit this array to add/remove countries you have visited.
-    // Use the standard two-letter ISO country code (lowercase) matching the IDs in world-map.svg.
+    // Reconciled Country Array History
     const visited = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
@@ -129,22 +158,7 @@
       { name: 'Poland', code: 'pl', year: 2009 },
       { name: 'Czech Republic', code: 'cz', year: 2012 },
       { name: 'Mexico', code: 'mx', year: 2025 },
-      { name: 'USA - Florida', code: 'us', year: 2016 },
-      { name: 'USA - Illinois', code: 'us', year: 2018 },
-      { name: 'USA - Indiana', code: 'us', year: 2018 },
-      { name: 'USA - Michigan', code: 'us', year: 2018 },
-      { name: 'USA - Ohio', code: 'us', year: 2020 },
-      { name: 'USA - New York', code: 'us', year: 2020 },
-      { name: 'USA - California', code: 'us', year: 2022 },
-      { name: 'USA - Nevada', code: 'us', year: 2022 },
-      { name: 'USA - Utah', code: 'us', year: 2022 },
-      { name: 'USA - Arizona', code: 'us', year: 2022 },
-      { name: 'USA - Wyoming', code: 'us', year: 2022 },
-      { name: 'USA - Colorado', code: 'us', year: 2022 },
-      { name: 'USA - Nebraska', code: 'us', year: 2022 },
-      { name: 'USA - Iowa', code: 'us', year: 2022 },
-      { name: 'USA - Texas', code: 'us', year: 2023 },
-      { name: 'USA - Hawaii', code: 'us', year: 2024 },
+      { name: 'United States', code: 'us', year: 2016 },
       { name: 'Liechtenstein', code: 'li', year: 2013 },
       { name: 'Switzerland', code: 'ch', year: 2013 },
       { name: 'Netherlands', code: 'nl', year: 2017 },
@@ -153,56 +167,99 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Sort countries alphabetically
-    visited.sort((a, b) => a.name.localeCompare(b.name));
+    // Explicit US States History Breakdown
+    const visitedStates = [
+      { name: 'Florida', code: 'fl', year: 2016 },
+      { name: 'Illinois', code: 'il', year: 2018 },
+      { name: 'Indiana', code: 'in', year: 2018 },
+      { name: 'Michigan', code: 'mi', year: 2018 },
+      { name: 'Ohio', code: 'oh', year: 2020 },
+      { name: 'New York', code: 'ny', year: 2020 },
+      { name: 'California', code: 'ca', year: 2022 },
+      { name: 'Nevada', code: 'nv', year: 2022 },
+      { name: 'Utah', code: 'ut', year: 2022 },
+      { name: 'Arizona', code: 'az', year: 2022 },
+      { name: 'Wyoming', code: 'wy', year: 2022 },
+      { name: 'Colorado', code: 'co', year: 2022 },
+      { name: 'Nebraska', code: 'ne', year: 2022 },
+      { name: 'Iowa', code: 'ia', year: 2022 },
+      { name: 'Texas', code: 'tx', year: 2023 },
+      { name: 'Hawaii', code: 'hi', year: 2024 }
+    ];
 
-    // Update Counter
+    // Alphabetize lists
+    visited.sort((a, b) => a.name.localeCompare(b.name));
+    visitedStates.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Render Metrics Stats Counters
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
+    document.getElementById('us-stat').innerHTML =
+      `<span class="num">${visitedStates.length}</span><span class="label">states visited</span>`;
 
-    // Populate Country Grid
+    // Populate Text Layout Grids
     document.getElementById('countries').innerHTML = visited
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
+    document.getElementById('states-list').innerHTML = visitedStates
+      .map(s => `<span>${s.name} (${s.year})</span>`).join('');
 
-    // Map Initialization
-    const mapContainer = document.getElementById('map');
+    // Shared Tooltip Pointer Reference
+    const tip = document.getElementById('global-tooltip');
 
+    // 1. Render World Map SVG
+    const worldMapContainer = document.getElementById('map');
     fetch('world-map.svg')
       .then(r => r.text())
       .then(svg => {
-        mapContainer.innerHTML = svg + '<div class="map-tooltip" id="tooltip"></div>';
-        const tip = document.getElementById('tooltip');
+        worldMapContainer.innerHTML = svg;
 
         visited.forEach(({ code, name }) => {
-          const el = document.getElementById(code);
+          const el = worldMapContainer.querySelector(`#${code}`);
           if (!el) return;
           if (el.tagName === 'g') {
             el.querySelectorAll('path, polygon').forEach(p => {
               p.classList.add('visited');
-              p.dataset.country = name;
+              p.dataset.label = name;
             });
           } else {
             el.classList.add('visited');
-            el.dataset.country = name;
+            el.dataset.label = name;
           }
-        });
-
-        // Tooltip Events
-        mapContainer.addEventListener('mousemove', e => {
-          const target = e.target.closest('.visited');
-          if (target && target.dataset.country) {
-            tip.textContent = target.dataset.country;
-            tip.classList.add('visible');
-            tip.style.left = e.clientX + 12 + 'px';
-            tip.style.top = e.clientY - 28 + 'px';
-          } else {
-            tip.classList.remove('visible');
-          }
-        });
-        mapContainer.addEventListener('mouseleave', () => {
-          tip.classList.remove('visible');
         });
       });
+
+    // 2. Render US States Map SVG
+    const usMapContainer = document.getElementById('us-map');
+    fetch('usa-states-map.svg')
+      .then(r => r.text())
+      .then(svg => {
+        usMapContainer.innerHTML = svg;
+
+        visitedStates.forEach(({ code, name }) => {
+          const el = usMapContainer.querySelector(`.${code}`);
+          if (!el) return;
+          el.classList.add('visited');
+          el.dataset.label = name;
+        });
+      });
+
+    // Universal Tooltip Interactive Event Bus Handler
+    function handleMapHover(e) {
+      const target = e.target.closest('.visited');
+      if (target && target.dataset.label) {
+        tip.textContent = target.dataset.label;
+        tip.classList.add('visible');
+        tip.style.left = e.clientX + 12 + 'px';
+        tip.style.top = e.clientY - 28 + 'px';
+      } else {
+        tip.classList.remove('visible');
+      }
+    }
+
+    [worldMapContainer, usMapContainer].forEach(container => {
+      container.addEventListener('mousemove', handleMapHover);
+      container.addEventListener('mouseleave', () => tip.classList.remove('visible'));
+    });
   </script>
 </body>
 </html>
