@@ -17,7 +17,7 @@
       background: #ffffff;
       border-top: 1px solid #f1f1ef;
       border-bottom: 1px solid #f1f1ef;
-      padding: 20px 0;
+      padding: 16px 0;
     }
     .map-container {
       width: 100%;
@@ -27,7 +27,7 @@
       box-sizing: border-box;
       position: relative;
     }
-    /* Responsive full container width scaling logic out of the box */
+    /* Fluid scalable width property attributes letting the SVG expand naturally */
     .map-container svg {
       width: 100%;
       height: auto;
@@ -90,26 +90,26 @@
 
   <h1>Travel</h1>
 
-  <!-- Full viewport responsive vector map layout canvas frame layer wrapper container -->
+  <!-- Widescreen 100vw edge-to-edge interactive map grid container cell panel wrapper -->
   <div class="map-wrap">
     <div class="map-container" id="map"></div>
     <div class="map-tooltip" id="tooltip"></div>
   </div>
 
-  <!-- International Countries checklist summary items grids layers -->
+  <!-- Countries Stats Checklist section summaries labels -->
   <div class="travel-stat" id="stat"></div>
   <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="countries"></div>
   </section>
 
-  <!-- Domestic United States subdivisions states summaries items grids layers -->
+  <!-- US States Stats Checklist section summaries labels -->
   <div class="travel-stat" id="us-stat" style="margin-top: 32px;"></div>
   <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="states-list"></div>
   </section>
 
   <script>
-    // Reconciled Global Travel portfolio logs database dataset records values parameters
+    // Reconciled Global Travel database array items logs history parameters
     const visited = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
@@ -143,7 +143,7 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Visited domestic US subdivisions state maps checklist logs history
+    // Visited domestic United States state nodes entries indices logs history
     const visitedStates = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
@@ -163,17 +163,17 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Alphabetical sort arrangements vectors summaries
+    // Alphabetization locale sort actions rules
     visited.sort((a, b) => a.name.localeCompare(b.name));
     visitedStates.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Populate texts counters val elements badges
+    // Render numerical summaries value headers elements 
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
     document.getElementById('us-stat').innerHTML =
       `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
 
-    // Render checklists components flat grid spans 
+    // Render checklists details flat grids spans 
     document.getElementById('countries').innerHTML = visited
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
     document.getElementById('states-list').innerHTML = visitedStates
@@ -181,7 +181,7 @@
 
     const mapContainer = document.getElementById('map');
 
-    // Dynamic cache-busting async loaders routines forcing pristine downloads strings
+    // Enforce dynamic cache-buster version tokens indices queries onto fetch operations vectors load
     fetch('world-map.svg?v=' + new Date().getTime())
       .then(r => r.text())
       .then(svg => {
@@ -190,16 +190,17 @@
         
         const svgEl = mapContainer.querySelector('svg');
         if (svgEl) {
-          // Strip off fixed file vector constraints attributes completely to let it fluidly fill large bounds container width width 100%
+          // Programmatically wipe away restrictive dimension properties attributes right from the vector objects
           svgEl.removeAttribute('width');
           svgEl.removeAttribute('height');
           svgEl.removeAttribute('fill');
           
-          // DEFINITIVE SCALE FIX: Restore the map's true native horizontal coordinate scope bounds (2528 units width wide!) 
-          // and crop the bottom grid to perfectly clip Antarctica away while keeping visible world landmass massive and widescreen legible!
-          svgEl.setAttribute('viewBox', '82.992 45.607 2528.5721 950');
+          // DEFINITIVE EXPANSIVE CROP ZOOM: Heavily adjust starting X/Y offsets bounds to completely 
+          // slice away massive blank margins ocean padding buffers on the left and right edges caps, 
+          // forcing the visible continents masses to zoom in large and occupy maximum widescreen display body format layout footprints!
+          svgEl.setAttribute('viewBox', '320 50 1960 940');
           
-          // Inject priority styling node overrides rules crushing default parameters definitions lines colors perfectly
+          // Inject highest specificity stylesheet rule parameters overrides crushing defaults variables parameters values
           let embeddedStyle = svgEl.querySelector('#style_css_sheet') || svgEl.querySelector('style');
           if (!embeddedStyle) {
             embeddedStyle = document.createElementNS("http://www.w3.org/2000/svg", "style");
@@ -208,29 +209,29 @@
           }
           
           embeddedStyle.textContent = `
-            /* Resilient off-white gray fill and sharp clear dark contours borders separation paths universally */
+            /* Pristine off-white unvisited colors and clear high contrast visible outlines boundaries separations paths */
             path, polygon, circle {
               fill: #f4f4f2 !important;
               stroke: #c5c5c3 !important;
               stroke-width: 0.5px !important;
             }
-            /* Background ocean properties targets matching minimalist preference indicators */
+            /* Transparent background attributes settings tracking ocean backfills preference features */
             .oceanxx, #ocean, rect[fill="#ffffff"] {
               fill: #ffffff !important;
               stroke: none !important;
             }
-            /* Completely collapse duplicate metadata floating circle features placeholders */
+            /* Completely destroy legacy small metadata circles tags groups elements completely */
             .circlexx, .subxx, .unxx, .noxx {
               display: none !important;
               opacity: 0 !important;
             }
-            /* Pristine premium deep charcoal shading fill backfill color and crisp sharp white boundaries contours lines separating elements */
+            /* Rich charcoal backfill fill coloring and pristine crisp solid white lines outlines separating adjacent shaded features shape profiles */
             .visited, path.visited, polygon.visited, [id^="us-"].visited {
               fill: #37352f !important;
               stroke: #ffffff !important;
               stroke-width: 0.8px !important;
             }
-            /* Mask trailing polar land masses blocks out entirely from vector displays branches trees trees views */
+            /* Permanent total collapse override completely hiding Antarctica from the document canvas layout */
             #AQ, .aq, [id="us-aq"], [id="aq"] {
               display: none !important;
               opacity: 0 !important;
@@ -238,7 +239,7 @@
           `;
         }
 
-        // 1. Paint Visited International Countries shapes nodes (strictly skipping compound group filters variables checks)
+        // 1. Paint Visited Countries shapes (strictly skipping compound general USA parent loops elements tag identifiers)
         visited.forEach(({ code, name }) => {
           const cleanCode = code.toLowerCase().trim();
           if (cleanCode === 'us' || cleanCode === 'usa') return;
@@ -257,7 +258,7 @@
           });
         });
 
-        // 2. Paint Visited domestic United States states individual path elements natively directly on the map
+        // 2. Paint Visited domestic United States sub-national state borders individual paths natively beautifully
         visitedStates.forEach(({ code, name }) => {
           const cleanCode = code.toLowerCase().trim();
           const permutations = [
@@ -287,7 +288,7 @@
           }
         });
 
-        // Standard popup window coordinates cursor tracking coordination routines perfect strings trackers
+        // Unified positioning coordinate mouse moving interactions popups tooltips overlays logs perfect trackers 
         mapContainer.addEventListener('mousemove', e => {
           const target = e.target.closest('.visited');
           if (target && target.dataset.label) {
