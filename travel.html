@@ -19,37 +19,7 @@
       width: 100%;
       height: auto;
       display: block;
-    }
-    .map-container svg path,
-    .map-container svg polygon,
-    .map-container svg g {
-      transition: fill 0.2s ease;
-    }
-    
-    /* Unvisited default land style styling universal path tags */
-    .map-container svg path,
-    .map-container svg polygon {
-      fill: #f1f1ef !important;
-      stroke: #ffffff !important;
-      stroke-width: 0.5 !important;
-    }
-    
-    /* Oceans stay clean white background */
-    .map-container svg .oceanxx,
-    .map-container svg #ocean {
-      fill: #ffffff !important;
-      stroke: none !important;
-    }
-
-    /* Highly specific path matching for visited items to override universal selectors */
-    .map-container svg path.visited,
-    .map-container svg polygon.visited {
-      fill: #37352f !important;
-      cursor: pointer;
-    }
-    .map-container svg path.visited:hover,
-    .map-container svg polygon.visited:hover {
-      fill: #787774 !important;
+      background: #ffffff;
     }
 
     .map-tooltip {
@@ -125,7 +95,7 @@
   </section>
 
   <script>
-    // Complete Reconciled Travel Datasets History
+    // Complete International Reconciled Country Dataset History
     const visited = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
@@ -159,7 +129,7 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Explicit Visited US State Lists Breakdown
+    // Explicit US State Visit Lists Breakdown History
     const visitedStates = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
@@ -179,40 +149,63 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Sort arrays alphabetized
+    // Sort alphabetized
     visited.sort((a, b) => a.name.localeCompare(b.name));
     visitedStates.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Print counts metric values
+    // Render badged metric text templates
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
     document.getElementById('us-stat').innerHTML =
       `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
 
-    // Render layouts grid blocks
+    // Render grids lists checklist
     document.getElementById('countries').innerHTML = visited
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
     document.getElementById('states-list').innerHTML = visitedStates
       .map(s => `<span>${s.name} (${s.year})</span>`).join('');
 
-    // Container select target elements
     const mapContainer = document.getElementById('map');
 
-    // Load high fidelity subdivisions vector map layout
+    // Fetch & Load authentic subdivisions vector data
     fetch('world-map.svg')
       .then(r => r.text())
       .then(svg => {
         mapContainer.innerHTML = svg + '<div class="map-tooltip" id="tooltip"></div>';
         const tip = document.getElementById('tooltip');
         
-        // Distort/Zoom Map dynamically by adjusting the viewBox boundary height 
-        // to completely crop out Antarctica and enlarge visible lands
         const svgEl = mapContainer.querySelector('svg');
         if (svgEl) {
-          svgEl.setAttribute('viewBox', '82.992 45.607 2528.5721 1040');
+          // Distort height coordinates to completely hide Antarctica and maximize landmass size legibility
+          svgEl.setAttribute('viewBox', '82.992 45.607 2528.5721 1020');
+          
+          // Inject highly specific coloring overrides directly inside the vector tree element
+          // for pristine border contours and absolute class priority mapping
+          const styleNode = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+          styleNode.textContent = `
+            /* Crisp refined borders between unvisited countries */
+            path, polygon {
+              fill: #f4f4f2 !important;
+              stroke: #cfcfcd !important;
+              stroke-width: 0.6 !important;
+            }
+            /* Absolute clean white mask for ocean canvas backgrounds */
+            .oceanxx, #ocean {
+              fill: #ffffff !important;
+              stroke: none !important;
+            }
+            /* Elegant dark charcoal filling with distinct white separation borders for visited spots */
+            path.visited, polygon.visited {
+              fill: #37352f !important;
+              stroke: #ffffff !important;
+              stroke-width: 0.8 !important;
+              cursor: pointer !important;
+            }
+          `;
+          svgEl.appendChild(styleNode);
         }
 
-        // 1. Paint Reconciled Country shapes (skiping general solid US group fill)
+        // 1. Shading Country entities (skipping global parent code matching for US)
         visited.forEach(({ code, name }) => {
           if (code.toLowerCase() === 'us') return;
           
@@ -222,23 +215,26 @@
           if (el.tagName === 'g') {
             el.querySelectorAll('path, polygon').forEach(p => {
               p.classList.add('visited');
+              p.setAttribute('class', p.getAttribute('class') + ' visited');
               p.dataset.label = name;
             });
           } else {
             el.classList.add('visited');
+            el.setAttribute('class', el.getAttribute('class') + ' visited');
             el.dataset.label = name;
           }
         });
 
-        // 2. Paint Explicit visited US States via custom specific path target matching
+        // 2. Shading Granular individual US State elements explicitly
         visitedStates.forEach(({ code, name }) => {
           const el = mapContainer.querySelector(`#us-${code.toLowerCase()}`);
           if (!el) return;
           el.classList.add('visited');
+          el.setAttribute('class', el.getAttribute('class') + ' visited');
           el.dataset.label = `USA - ${name}`;
         });
 
-        // Unified Tooltip listener logic matching mouse coordinates
+        // Map interaction mouse move listeners
         mapContainer.addEventListener('mousemove', e => {
           const target = e.target.closest('.visited');
           if (target && target.dataset.label) {
