@@ -20,19 +20,37 @@
       height: auto;
       display: block;
     }
+    /* Override map default coloring to match aesthetic */
     .map-container svg path,
-    .map-container svg polygon {
-      fill: #f1f1ef;
-      stroke: #fff;
-      stroke-width: 0.3;
+    .map-container svg polygon,
+    .map-container svg g {
       transition: fill 0.2s ease;
     }
+    
+    /* Unvisited default land style */
+    .map-container svg .landxx,
+    .map-container svg .coastxx,
+    .map-container svg path,
+    .map-container svg polygon {
+      fill: #f1f1ef !important;
+      stroke: #ffffff !important;
+      stroke-width: 0.4;
+    }
+    
+    /* Oceans stay clean white */
+    .map-container svg .oceanxx,
+    .map-container svg #ocean {
+      fill: #ffffff !important;
+      stroke: none !important;
+    }
+
+    /* Visited country and state fills */
     .map-container svg .visited {
-      fill: #37352f;
+      fill: #37352f !important;
       cursor: pointer;
     }
     .map-container svg .visited:hover {
-      fill: #787774;
+      fill: #787774 !important;
     }
 
     .map-tooltip {
@@ -83,18 +101,11 @@
     .country-grid span:nth-child(odd) { padding-right: 12px; }
     .country-grid span:nth-child(even) { padding-left: 12px; }
     .country-grid span:hover { color: #37352f; }
-    
-    hr.section-divider {
-      margin-top: 48px;
-      border: 0;
-      border-top: 1px solid #f1f1ef;
-    }
   </style>
 </head>
 <body>
   <script src="nav.js"></script>
 
-  <!-- Master Single Map Canvas Grid -->
   <h1>Travel</h1>
 
   <div class="map-wrap">
@@ -185,22 +196,21 @@
     document.getElementById('states-list').innerHTML = visitedStates
       .map(s => `<span>${s.name} (${s.year})</span>`).join('');
 
-    // Single Map Container Target
+    // Map Container Target
     const mapContainer = document.getElementById('map');
-    const tooltip = document.getElementById('tooltip');
 
-    // Fetch & Process High Fidelity Map Asset
+    // Fetch & Process Reconciled Subdivisions Map Asset
     fetch('world-map.svg')
       .then(r => r.text())
       .then(svg => {
         mapContainer.innerHTML = svg + '<div class="map-tooltip" id="tooltip"></div>';
         const tip = document.getElementById('tooltip');
 
-        // 1. Highlight Reconciled Countries (Except general US solid filling landmass)
+        // 1. Highlight Visited Countries (Pruning group skip for US to handle custom state selectors instead)
         visited.forEach(({ code, name }) => {
-          if (code.toLowerCase() === 'us') return; // Defer to granular states vector path shading lookups
+          if (code.toLowerCase() === 'us') return;
           
-          const el = mapContainer.querySelector(`#${code.toUpperCase()}`);
+          const el = mapContainer.querySelector(`#${code.toLowerCase()}`);
           if (!el) return;
 
           if (el.tagName === 'g') {
@@ -214,15 +224,15 @@
           }
         });
 
-        // 2. Highlight Explicit USA States paths inside the main World Canvas
+        // 2. Highlight Explicit USA States paths using id="us-xx" tags
         visitedStates.forEach(({ code, name }) => {
-          const el = mapContainer.querySelector(`.${code.toLowerCase()}`);
+          const el = mapContainer.querySelector(`#us-${code.toLowerCase()}`);
           if (!el) return;
           el.classList.add('visited');
           el.dataset.label = `USA - ${name}`;
         });
 
-        // Add Unified Mouse Listeners for Interaction Canvas tooltips
+        // Interaction Tooltips Setup listeners
         mapContainer.addEventListener('mousemove', e => {
           const target = e.target.closest('.visited');
           if (target && target.dataset.label) {
