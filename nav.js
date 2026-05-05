@@ -1,6 +1,7 @@
 const navLinks = [
   { href: '/', label: 'About' },
   { href: '/blog.html', label: 'Blog' },
+  { href: '/travel.html', label: 'Travel' },
 ];
 
 const nav = document.createElement('nav');

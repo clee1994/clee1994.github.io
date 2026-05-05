@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travel – Clemens JS Schaefer</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+  <style>
+    .map-wrap {
+      margin-top: 32px;
+      position: relative;
+    }
+    .map-container {
+      width: calc(100% + 48px);
+      margin-left: -24px;
+      position: relative;
+    }
+    .map-container svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .map-container svg path,
+    .map-container svg polygon {
+      fill: #f1f1ef;
+      stroke: #fff;
+      stroke-width: 0.4;
+      transition: fill 0.2s ease;
+    }
+    .map-container svg .visited {
+      fill: #37352f;
+      cursor: pointer;
+    }
+    .map-container svg .visited:hover {
+      fill: #787774;
+    }
+
+    .map-tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: #37352f;
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.1s ease;
+      z-index: 50;
+      white-space: nowrap;
+    }
+    .map-tooltip.visible { opacity: 1; }
+
+    .travel-stat {
+      margin-top: 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .travel-stat .num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1;
+      color: #37352f;
+    }
+    .travel-stat .label {
+      font-size: 0.8125rem;
+      color: #b4b4b0;
+    }
+
+    .country-section { margin-top: 40px; }
+    .country-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .country-grid span {
+      font-size: 0.875rem;
+      color: #55534e;
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f1ef;
+    }
+    .country-grid span:nth-child(odd) { padding-right: 12px; }
+    .country-grid span:nth-child(even) { padding-left: 12px; }
+    .country-grid span:hover { color: #37352f; }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+
+  <h1>Travel</h1>
+
+  <div class="map-wrap">
+    <div class="map-container" id="map"></div>
+    <div class="map-tooltip" id="tooltip"></div>
+  </div>
+
+  <div class="travel-stat" id="stat"></div>
+
+  <section class="country-section">
+    <h2>Countries</h2>
+    <div class="country-grid" id="countries"></div>
+  </section>
+
+  <script>
+    // Edit this array to add/remove countries you have visited.
+    // Use the standard two-letter ISO country code (lowercase) matching the IDs in world-map.svg.
+    const visited = [
+      { name: 'United States', code: 'us' },
+      { name: 'Germany', code: 'de' },
+      { name: 'Austria', code: 'at' },
+      { name: 'United Kingdom', code: 'gb' },
+    ];
+
+    // Sort countries alphabetically
+    visited.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Update Counter
+    document.getElementById('stat').innerHTML =
+      `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
+
+    // Populate Country Grid
+    document.getElementById('countries').innerHTML = visited
+      .map(c => `<span>${c.name}</span>`).join('');
+
+    // Map Initialization
+    const mapContainer = document.getElementById('map');
+
+    fetch('world-map.svg')
+      .then(r => r.text())
+      .then(svg => {
+        mapContainer.innerHTML = svg + '<div class="map-tooltip" id="tooltip"></div>';
+        const tip = document.getElementById('tooltip');
+
+        visited.forEach(({ code, name }) => {
+          const el = document.getElementById(code);
+          if (!el) return;
+          if (el.tagName === 'g') {
+            el.querySelectorAll('path, polygon').forEach(p => {
+              p.classList.add('visited');
+              p.dataset.country = name;
+            });
+          } else {
+            el.classList.add('visited');
+            el.dataset.country = name;
+          }
+        });
+
+        // Tooltip Events
+        mapContainer.addEventListener('mousemove', e => {
+          const target = e.target.closest('.visited');
+          if (target && target.dataset.country) {
+            tip.textContent = target.dataset.country;
+            tip.classList.add('visible');
+            tip.style.left = e.clientX + 12 + 'px';
+            tip.style.top = e.clientY - 28 + 'px';
+          } else {
+            tip.classList.remove('visible');
+          }
+        });
+        mapContainer.addEventListener('mouseleave', () => {
+          tip.classList.remove('visible');
+        });
+      });
+  </script>
+</body>
+</html>
