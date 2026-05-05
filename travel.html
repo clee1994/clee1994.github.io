@@ -106,10 +106,28 @@
     // Edit this array to add/remove countries you have visited.
     // Use the standard two-letter ISO country code (lowercase) matching the IDs in world-map.svg.
     const visited = [
-      { name: 'United States', code: 'us' },
-      { name: 'Germany', code: 'de' },
-      { name: 'Austria', code: 'at' },
-      { name: 'United Kingdom', code: 'gb' },
+      { name: 'Germany', code: 'de', year: 'born' },
+      { name: 'Iceland', code: 'is', year: 2006 },
+      { name: 'Austria', code: 'at', year: 2008 },
+      { name: 'Ireland', code: 'ie', year: 2007 },
+      { name: 'Norway', code: 'no', year: 2009 },
+      { name: 'Denmark', code: 'dk', year: 2025 },
+      { name: 'Italy', code: 'it', year: 2025 },
+      { name: 'Peru', code: 'pe', year: 2012 },
+      { name: 'Colombia', code: 'co', year: 2016 },
+      { name: 'Ecuador', code: 'ec', year: 2016 },
+      { name: 'Panama', code: 'pa', year: 2017 },
+      { name: 'Costa Rica', code: 'cr', year: 2015 },
+      { name: 'India', code: 'in', year: 2015 },
+      { name: 'Israel', code: 'il', year: 2013 },
+      { name: 'France', code: 'fr', year: 2005 },
+      { name: 'Spain', code: 'es', year: 2013 },
+      { name: 'Cyprus', code: 'cy', year: 2012 },
+      { name: 'United Kingdom', code: 'gb', year: 2012 },
+      { name: 'China', code: 'cn', year: 2026 },
+      { name: 'Japan', code: 'jp', year: 2026 },
+      { name: 'Poland', code: 'pl', year: 2010 },
+      { name: 'Czech Republic', code: 'cz', year: 2012 }
     ];
 
     // Sort countries alphabetically
@@ -121,7 +139,7 @@
 
     // Populate Country Grid
     document.getElementById('countries').innerHTML = visited
-      .map(c => `<span>${c.name}</span>`).join('');
+      .map(c => `<span>${c.name} (${c.year})</span>`).join('');
 
     // Map Initialization
     const mapContainer = document.getElementById('map');
