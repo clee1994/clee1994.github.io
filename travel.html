@@ -27,7 +27,7 @@
       box-sizing: border-box;
       position: relative;
     }
-    /* Responsive horizontal mapping panel fluid dimensions banner scale look */
+    /* Responsive fluid horizontal breakout world vector map display canvas */
     .map-container svg {
       width: 100%;
       height: auto;
@@ -48,6 +48,7 @@
       z-index: 50;
       white-space: nowrap;
     }
+    .map-tooltip.toggle_visible { opacity: 1; }
     .map-tooltip.visible { opacity: 1; }
 
     .travel-stat {
@@ -90,26 +91,26 @@
 
   <h1>Travel</h1>
 
-  <!-- Premium 100vw edge-to-edge horizontal widescreen travel banner layer wrap canvas container cell -->
+  <!-- Expansive responsive edge-to-edge widescreen banner panel display container layout -->
   <div class="map-wrap">
     <div class="map-container" id="map"></div>
     <div class="map-tooltip" id="tooltip"></div>
   </div>
 
-  <!-- Countries checklist parameters grid blocks spans columns links headers metrics -->
+  <!-- Countries Widget Badges Widget widgets metrics flat columns rows links -->
   <div class="travel-stat" id="stat"></div>
   <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="countries"></div>
   </section>
 
-  <!-- US States checklist parameters grid blocks spans columns links headers metrics -->
+  <!-- US States Widget Badges Widget widgets metrics flat columns rows links -->
   <div class="travel-stat" id="us-stat" style="margin-top: 32px;"></div>
   <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="states-list"></div>
   </section>
 
   <script>
-    // Reconciled travel dataset arrays metrics database log values parameters history
+    // Global unified travel checklist metrics database array logs parameters history
     const visited = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
@@ -143,7 +144,7 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Visited domestic United States state codes list parameter data records history
+    // Visited United States domestic subdivisions states logs parameters records metrics
     const visitedStates = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
@@ -163,17 +164,17 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Sort alphabetization arrangements routines matching fields parameters
+    // Alphabetical configuration sorts metrics list layout matching templates preference
     visited.sort((a, b) => a.name.localeCompare(b.name));
     visitedStates.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Render metrics stats headers counts numbers text templates widgets
+    // Populate widgets statistics counter badges text elements 
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
     document.getElementById('us-stat').innerHTML =
       `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
 
-    // Render column checklist grid blocks rows spans 
+    // Populate text checklist items columns flat sheets rows spans 
     document.getElementById('countries').innerHTML = visited
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
     document.getElementById('states-list').innerHTML = visitedStates
@@ -181,7 +182,7 @@
 
     const mapContainer = document.getElementById('map');
 
-    // Execute cache-busted unique parameter version query async fetch loaders 
+    // Trigger fresh query cache-busted version parameters request download loaders onto uniquely named asset path route
     fetch('world-map-subdivisions-v1.svg?v=' + new Date().getTime())
       .then(r => r.text())
       .then(svg => {
@@ -190,17 +191,18 @@
         
         const svgEl = mapContainer.querySelector('svg');
         if (svgEl) {
-          // Strip fixed file vector constraints attributes cleanly from elements trees reference logs
+          // Purge fixed vector size limitations cleanly from object tags trees structures reference
           svgEl.removeAttribute('width');
           svgEl.removeAttribute('height');
           svgEl.removeAttribute('fill');
           
-          // HEADROOM COMPACT VIEWBOX CROP: Y-Span vertical range metric tightly scaled to 1220 units 
-          // to ensure South America remains sprawlingly wide and full visible, with Antarctica cleanly cut off bounds
+          // DEFINITIVE HEADROOM VIEWBOX OVERRIDE BOUNDING BOX: Vertical view coordinates span parameter 
+          // explicitly scaled to 1220 coordinate height range limits to guarantee South America displays completely uncropped, 
+          // expanded, sprawling and prominent wide, while cutting off Antarctica clean below the bottom frames limits!
           svgEl.setAttribute('viewBox', '140 40 2410 1220');
           svgEl.setAttribute('preserveAspectRatio', 'xMidYMid slice');
           
-          // Inject dominant stylesheet rules parameter settings flattening asset default overrides variables
+          // Inject dominant style sheets rules text strings flattening pre existing file details defaults properties
           let embeddedStyle = svgEl.querySelector('#style_css_sheet') || svgEl.querySelector('style');
           if (!embeddedStyle) {
             embeddedStyle = document.createElementNS("http://www.w3.org/2000/svg", "style");
@@ -209,40 +211,40 @@
           }
           
           embeddedStyle.textContent = `
-            /* Pristine off-white unvisited colors and sharp uniform solid white outlines bounds maps separations universally */
+            /* Pristine uniform default soft off-white light gray fill background and solid distinct white borders lines contours separations universally */
             path, polygon, circle {
               fill: #f4f4f2 !important;
               stroke: #ffffff !important;
               stroke-width: 0.6px !important;
             }
-            /* Ocean vector backing specs parameter tracking preference layouts styles rules */
+            /* Sea transparent backfill spec adjustments layout parameter matches styles definitions rules */
             .oceanxx, #ocean, rect[fill="#ffffff"] {
               fill: #ffffff !important;
               stroke: none !important;
             }
-            /* Strip out floating metadata circle layer indicators entirely */
+            /* Drop matching floating metadata circle bubbles indicators layers placeholders completely */
             .circlexx, .subxx, .unxx, .noxx {
               display: none !important;
               opacity: 0 !important;
             }
-            /* Rich travel charcoal shading fill backfill color and pristine solid white borders line separating shape features */
+            /* High legibility dark charcoal highlights cover color shading fill property string and sharp white borders contours lines splits features profiles */
             .visited, path.visited, polygon.visited {
               fill: #37352f !important;
               stroke: #ffffff !important;
               stroke-width: 0.8px !important;
             }
             
-            /* DEFINITIVE CRITICAL DATA-ID SPECIFICITY SELECTOR override GUARANTEE MATRIX: 
-               Because this high resolution subdivisions SVG maps state lines via a nested custom 'data-id' 
-               attribute canvas property (e.g. data-id="CA"), this direct stylesheet mapping selector list 
-               matches them natively on the DOM tree with absolute important priority weight scaling live! */
+            /* ULTIMATE DATA-ID SELECTOR SHADING override MATRIX: Because this high resolution subdivisions 
+               SVG map structures individual sub national sub states outlines via custom dataset tags properties 
+               attributes (e.g. data-id="CA"), this direct text rules attribute selector mapping array forces 
+               immediate, native visual coloringVis dominance across both uppercase and lowercase tokens natively! */
             [data-id="FL"], [data-id="fl"], [data-id="IL"], [data-id="il"], [data-id="IN"], [data-id="in"], [data-id="MI"], [data-id="mi"], [data-id="OH"], [data-id="oh"], [data-id="NY"], [data-id="ny"], [data-id="CA"], [data-id="ca"], [data-id="NV"], [data-id="nv"], [data-id="UT"], [data-id="ut"], [data-id="AZ"], [data-id="az"], [data-id="WY"], [data-id="wy"], [data-id="CO"], [data-id="co"], [data-id="NE"], [data-id="ne"], [data-id="IA"], [data-id="ia"], [data-id="TX"], [data-id="tx"], [data-id="HI"], [data-id="hi"] {
               fill: #37352f !important;
               stroke: #ffffff !important;
               stroke-width: 0.8px !important;
             }
             
-            /* Keep Antarctica completely invisible from display path */
+            /* Slice off polar limits mass out entirely from view path display */
             #AQ, .aq, [id="us-aq"], [id="aq"] {
               display: none !important;
               opacity: 0 !important;
@@ -250,7 +252,7 @@
           `;
         }
 
-        // 1. Color Visited International Countries (strictly skipping general collective USA parent group tags checks)
+        // 1. Color Visited International Countries (strictly bypassing parent USA collective group nodes matches loops tracks checklist definitions strings)
         visited.forEach(({ code, name }) => {
           const cleanCode = code.toLowerCase().trim();
           if (cleanCode === 'us' || cleanCode === 'usa') return;
@@ -271,7 +273,7 @@
           });
         });
 
-        // 2. Color Granular Visited domestic United States state borders matching the nested custom data-id canvas properties
+        // 2. Color Granular Visited domestic United States subdivisions state shapes contours profiles elements beautifully inside the widescreen banner canvas
         visitedStates.forEach(({ code, name }) => {
           const cleanCode = code.toLowerCase().trim();
           const permutations = [
@@ -305,20 +307,14 @@
           }
         });
 
-        // Unified screen coordination mouse movement popup interactions perfect tracker listener loop routines
+        // Unified active coordination mouse hover position indicators labels tracking tooltip listeners perfect routines loops 
         mapContainer.addEventListener('mousemove', e => {
           let target = e.target.closest('.visited');
           
-          // Fallback scanner matching state custom attributes logic mappings cleanly
-          if (!target && e.target.dataset && e.target.dataset.id) {
-            const dId = e.target.dataset.id.toLowerCase();
-            if (visitedStates.some(s => s.code === dId)) {
-              target = e.target;
-            }
-          }
-          if (!target && e.target.getAttribute && e.target.getAttribute('data-id')) {
-            const dId = e.target.getAttribute('data-id').toLowerCase();
-            if (visitedStates.some(s => s.code === dId)) {
+          // Fallback context indicators lookup scan check mapping attributes cased codes values cleanly
+          if (!target && e.target.getAttribute) {
+            const dId = e.target.getAttribute('data-id');
+            if (dId && visitedStates.some(s => s.code === dId.toLowerCase())) {
               target = e.target;
             }
           }
