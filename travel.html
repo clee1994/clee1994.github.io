@@ -217,11 +217,11 @@
           }
           
           customStyle.textContent = `
-            /* Set unvisited land paths to a beautifully balanced soft gray background for superb visibility */
+            /* Set unvisited land paths to a beautifully balanced soft gray background */
             path, polygon, circle {
-              fill: #eaeaea !important;
-              stroke: #ffffff !important;
-              stroke-width: 0.4px !important;
+              fill: #eaeaea;
+              stroke: #ffffff;
+              stroke-width: 0.4px;
             }
             /* FORCE OCEANS COMPLETELY WHITE TO MATCH SITE BACKGROUND (No border lines) */
             .oceanxx, #ocean, path[class="oceanxx"], #svg2985 #ocean {
@@ -287,6 +287,17 @@
               fn.style.setProperty('fill', '#37352f', 'important');
               fn.dataset.label = `USA - ${name}`;
             });
+          }
+        });
+
+        // 3. Scoped Post-Processing Cleanup Matrix: Strip highlights off from explicit request exclusion shapes cells
+        const exclusions = ['gf', 'path6656', 'path6658', 'path6718', 'path6788', 'path6606', 'path6608', 'path6614', 'path6616', 'path6618', 'path6624', 'path6626', 'path6628', 'path6630', 'path6632', 'path6634', 'path6636', 'path6638', 'path6642', 'path6644', 'path6648', 'path6650', 'path6652', 'path6656', 'path6658', 'path6662', 'path6664', 'path6666', 'path6668', 'path6670', 'path6672', 'path6674', 'path6682', 'path6684', 'path6686', 'path6688', 'path6690', 'path6692', 'path6694', 'path6696', 'path6698', 'path6700', 'path6702', 'path6704', 'path6706', 'path6708', 'path6710', 'path6712', 'path6714', 'path6716', 'path6718', 'path6720', 'path6722', 'path6724', 'path6726', 'path6728', 'path6730', 'path6732', 'path6734', 'path6736', 'path6738', 'path6740', 'path6742', 'path6746', 'path6748', 'path6750', 'path6752', 'path6756', 'path6758', 'path6760', 'path6762', 'path6764', 'path6770', 'path6772', 'path6774', 'path6776', 'path6778'];
+        exclusions.forEach(id => {
+          const node = mapSlot.querySelector('#' + id);
+          if (node) {
+            node.classList.remove('shaded-visited');
+            node.style.setProperty('fill', '#eaeaea', 'important');
+            node.removeAttribute('data-label');
           }
         });
 
