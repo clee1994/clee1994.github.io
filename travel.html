@@ -252,10 +252,12 @@
             if (n.tagName === 'g') {
               n.querySelectorAll('path, polygon').forEach(p => {
                 p.classList.add('shaded-visited');
+                p.style.setProperty('fill', '#37352f', 'important');
                 p.dataset.label = name;
               });
             } else {
               n.classList.add('shaded-visited');
+              n.style.setProperty('fill', '#37352f', 'important');
               n.dataset.label = name;
             }
           });
@@ -268,10 +270,12 @@
           const stateEl = mapSlot.querySelector(`#us-${lowCode}`);
           if (stateEl) {
             stateEl.classList.add('shaded-visited');
+            stateEl.style.setProperty('fill', '#37352f', 'important');
             stateEl.dataset.label = `USA - ${name}`;
             if (stateEl.tagName === 'g') {
               stateEl.querySelectorAll('path, polygon').forEach(p => {
                 p.classList.add('shaded-visited');
+                p.style.setProperty('fill', '#37352f', 'important');
                 p.dataset.label = `USA - ${name}`;
               });
             }
@@ -280,6 +284,7 @@
             const fallbackNodes = mapSlot.querySelectorAll(`.us-${lowCode}, [class*="us-${lowCode}"]`);
             fallbackNodes.forEach(fn => {
               fn.classList.add('shaded-visited');
+              fn.style.setProperty('fill', '#37352f', 'important');
               fn.dataset.label = `USA - ${name}`;
             });
           }
