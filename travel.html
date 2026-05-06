@@ -9,30 +9,58 @@
     .map-wrap {
       margin-top: 32px;
       position: relative;
-      width: 100vw;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-left: -50vw;
-      background: #ffffff;
-      border-top: 1px solid #f1f1ef;
-      border-bottom: 1px solid #f1f1ef;
-      padding: 12px 0;
     }
     .map-container {
-      width: 100%;
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 0 24px;
-      box-sizing: border-box;
+      width: calc(100% + 48px);
+      margin-left: -24px;
       position: relative;
     }
-    /* Responsive fluid edge-to-edge horizontally wide vector travel map dashboard canvas display metrics */
     .map-container svg {
       width: 100%;
       height: auto;
       display: block;
-      background: #ffffff;
+    }
+    .map-container svg path,
+    .map-container svg polygon {
+      fill: #f1f1ef;
+      stroke: #fff;
+      stroke-width: 0.4;
+      transition: fill 0.2s ease;
+    }
+    .map-container svg .visited {
+      fill: #37352f;
+      cursor: pointer;
+    }
+    .map-container svg .visited:hover {
+      fill: #787774;
+    }
+
+    /* Dedicated US Map styles */
+    .usa-map-wrap {
+      margin-top: 24px;
+      position: relative;
+      border: 1px solid #f1f1ef;
+      border-radius: 6px;
+      padding: 12px;
+      background: #fafafa;
+    }
+    .usa-map-container svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .usa-map-container svg path {
+      fill: #e9e9e6;
+      stroke: #fff;
+      stroke-width: 1;
+      transition: fill 0.2s ease;
+    }
+    .usa-map-container svg .visited {
+      fill: #37352f;
+      cursor: pointer;
+    }
+    .usa-map-container svg .visited:hover {
+      fill: #787774;
     }
 
     .map-tooltip {
@@ -55,6 +83,8 @@
       display: flex;
       align-items: baseline;
       gap: 8px;
+      border-bottom: 2px solid #f1f1ef;
+      padding-bottom: 6px;
     }
     .travel-stat .num {
       font-family: 'IBM Plex Mono', monospace;
@@ -64,11 +94,14 @@
       color: #37352f;
     }
     .travel-stat .label {
-      font-size: 0.8125rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: #b4b4b0;
     }
 
-    .country-section { margin-top: 40px; }
+    .country-section { margin-top: 16px; }
     .country-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -90,27 +123,39 @@
 
   <h1>Travel</h1>
 
-  <!-- Full width fluid browser viewport edge-to-edge layout breakout banner canvas rows box wrap slot -->
+  <!-- WORLD SECTION -->
   <div class="map-wrap">
-    <div class="map-container" id="map"></div>
-    <div class="map-tooltip" id="tooltip"></div>
+    <div class="map-container" id="world-map-slot"></div>
   </div>
 
-  <!-- Countries checklist widgets components counters stats badges text nodes spans flat items row grids -->
-  <div class="travel-stat" id="stat"></div>
-  <section class="country-section" style="margin-top: 20px;">
-    <div class="country-grid" id="countries"></div>
+  <div class="travel-stat">
+    <span class="num" id="world-counter">0</span>
+    <span class="label">Countries Visited</span>
+  </div>
+  
+  <section class="country-section">
+    <div class="country-grid" id="countries-grid"></div>
   </section>
 
-  <!-- US States checklist widgets components counters stats badges text nodes spans flat items row grids -->
-  <div class="travel-stat" id="us-stat" style="margin-top: 32px;"></div>
-  <section class="country-section" style="margin-top: 20px;">
-    <div class="country-grid" id="states-list"></div>
+  <!-- US STATES SECTION -->
+  <div class="travel-stat" style="margin-top: 56px;">
+    <span class="num" id="usa-counter">0</span>
+    <span class="label">US States Visited</span>
+  </div>
+
+  <div class="usa-map-wrap">
+    <div class="usa-map-container" id="usa-map-slot"></div>
+  </div>
+
+  <section class="country-section">
+    <div class="country-grid" id="states-grid"></div>
   </section>
+
+  <div class="map-tooltip" id="global-tooltip"></div>
 
   <script>
-    // Reconciled global unified travels logging database parameters list arrays details entries metrics counter values
-    const visited = [
+    // Reconciled True International Countries List View (Includes USA 2016 unified parent node)
+    const countries = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
       { name: 'Austria', code: 'at', year: 2008 },
@@ -143,8 +188,8 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Visited individual United States subdivisions cased sub states codes breakdown indices tokens logs data parameters
-    const visitedStates = [
+    // Granular Breakdown dataset logging explicit US domestic sub states visits
+    const states = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
       { name: 'Indiana', code: 'in', year: 2018 },
@@ -163,258 +208,82 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Alphabetical sort transformations matching portfolio templates text elements structures rows grids flat spans
-    visited.sort((a, b) => a.name.localeCompare(b.name));
-    visitedStates.sort((a, b) => a.name.localeCompare(b.name));
+    // Alphabetize lists for clean tabular grid displays panel output 
+    countries.sort((a, b) => a.name.localeCompare(b.name));
+    states.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Populate widget stat counters text nodes badges 
-    document.getElementById('stat').innerHTML =
-      `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
-    document.getElementById('us-stat').innerHTML =
-      `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
+    // Update Counters Text elements
+    document.getElementById('world-counter').textContent = countries.length;
+    document.getElementById('usa-counter').textContent = states.length;
 
-    // Populate checklist visible column panels cells splits text blocks tokens spans components
-    document.getElementById('countries').innerHTML = visited
+    // Populate Layout Grid cells 
+    document.getElementById('countries-grid').innerHTML = countries
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
-    document.getElementById('states-list').innerHTML = visitedStates
+    document.getElementById('states-grid').innerHTML = states
       .map(s => `<span>${s.name} (${s.year})</span>`).join('');
 
-    const mapContainer = document.getElementById('map');
+    const tooltip = document.getElementById('global-tooltip');
 
-    // Fetch the pristine high resolution 1.74 MB subdivisions states vector map asset from cache busted unique asset route string path
-    fetch('world-map-subdivisions-v1.svg?v=' + new Date().getTime())
+    // ROUTINE 1: Initialize and Render Interactive World Map Graphic
+    const worldSlot = document.getElementById('world-map-slot');
+    fetch('world-map.svg')
       .then(r => r.text())
       .then(svg => {
-        mapContainer.innerHTML = svg;
-        const tip = document.getElementById('tooltip');
+        worldSlot.innerHTML = svg;
         
-        const svgEl = mapContainer.querySelector('svg');
-        if (svgEl) {
-          // Strip rigid dimension sizing limitations cleanly from elements object tags nodes layout hierarchies attributes
-          svgEl.removeAttribute('width');
-          svgEl.removeAttribute('height');
-          svgEl.removeAttribute('fill');
-          
-          // DEFINITIVE OPTIMIZED STRETCH VIEWBOX MATRIX bounding metric configurations parameters handles values:
-          // set directly at X=82 Y=45 coordinate axis bounds, and scaled to Y Span height 1140 coordinate units 
-          // to ensure the full South American continent contours draw beautifully complete, expanded wide and uncropped, 
-          // while completely squashing and masking Antarctic polar mass blocks away out of sight below the frames limits!
-          svgEl.setAttribute('viewBox', '82 45 2528 1140');
-          svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-          
-          // Inject dominant master stylesheets overrides rules block text string flatteningIntrinsic presets rules variables definitions
-          let embeddedStyle = svgEl.querySelector('#style_css_sheet') || svgEl.querySelector('style');
-          if (!embeddedStyle) {
-            embeddedStyle = document.createElementNS("http://www.w3.org/2000/svg", "style");
-            embeddedStyle.id = "style_css_sheet";
-            svgEl.insertBefore(embeddedStyle, svgEl.firstChild);
-          }
-          
-          embeddedStyle.textContent = `
-            /* Soft uniform off white unvisited land background fill color and clean sharp white borders shape contours splits universally */
-            path, polygon, circle {
-              fill: #f4f4f2 !important;
-              stroke: #ffffff !important;
-              stroke-width: 0.5px !important;
-            }
-            /* Sea backfill layers overlay adjustments specifications definitions matching theme preferences parameters */
-            .oceanxx, #ocean, rect[fill="#ffffff"], rect[fill="#c2e2ff"] {
-              fill: #ffffff !important;
-              stroke: none !important;
-            }
-            /* Collapse metadata circle flags indicators vectors components completely out from layout models lists trees */
-            .circlexx, .subxx, .unxx, .noxx {
-              display: none !important;
-              opacity: 0 !important;
-            }
-            /* Premium rich dark charcoal travel visited country cover fill highlights cased parameters values specifications rules codes */
-            .visited, path.visited, polygon.visited {
-              fill: #37352f !important;
-              stroke: #ffffff !important;
-              stroke-width: 0.8px !important;
-            }
-            
-            /* UNIVERSAL COMPOUND MASTER Selectors MATRIX RULE: Forcefully binds cased stylesheet highlight overrides 
-               across both lowercased state classes (.us-ca) and matching ID handles (#us-ca) with supreme priority values live! */
-            #us-fl, #us-il, #us-in, #us-mi, #us-oh, #us-ny, #us-ca, #us-nv, #us-ut, #us-az, #us-wy, #us-co, #us-ne, #us-ia, #us-tx, #us-hi,
-            .us-fl, .us-il, .us-in, .us-mi, .us-oh, .us-ny, .us-ca, .us-nv, .us-ut, .us-az, .us-wy, .us-co, .us-ne, .us-ia, .us-tx, .us-hi,
-            [class*="us-fl"], [class*="us-il"], [class*="us-in"], [class*="us-mi"], [class*="us-oh"], [class*="us-ny"], [class*="us-ca"], [class*="us-nv"], [class*="us-ut"], [class*="us-az"], [class*="us-wy"], [class*="us-co"], [class*="us-ne"], [class*="us-ia"], [class*="us-tx"], [class*="us-hi"] {
-              fill: #37352f !important;
-              stroke: #ffffff !important;
-              stroke-width: 0.8px !important;
-            }
-            
-            /* Keep polar cap masked out path display spaces */
-            #AQ, .aq, [id="us-aq"], [id="aq"] {
-              display: none !important;
-              opacity: 0 !important;
-            }
-          `;
-        }
-
-        // 1. Paint Visited International Countries (strictly bypassing USA collective parent country node selectors tracking branches loops)
-        visited.forEach(({ code, name }) => {
-          const cleanCode = code.toLowerCase().trim();
-          if (cleanCode === 'us' || cleanCode === 'usa') return;
-          
-          const elements = mapContainer.querySelectorAll(`#${cleanCode}, .${cleanCode}`);
-          elements.forEach(el => {
-            if (el.tagName === 'g') {
-              el.querySelectorAll('path, polygon').forEach(p => {
-                p.classList.add('visited');
-                p.setAttribute('fill', '#37352f');
-                p.style.setProperty('fill', '#37352f', 'important');
-                p.dataset.label = name;
-              });
-            } else {
-              el.classList.add('visited');
-              el.setAttribute('fill', '#37352f');
-              el.style.setProperty('fill', '#37352f', 'important');
-              el.dataset.label = name;
-            }
-          });
-        });
-
-        // 2. Paint Granular Visited domestic United States sub states outline layers paths elements natively via the master scripts loops
-        // SANITIZED SCOPED PATTERNS MATRIX SELECTION CHECK: Purges generic bare generic keys tokens (#ca, #ne) completely 
-        // to keep domestic queries 100% isolated from cross-contaminating international boundaries outlines shapes profiles universally!
-        visitedStates.forEach(({ code, name }) => {
-          const cleanCode = code.toLowerCase().trim();
-          const permutations = [
-            `#us-${cleanCode}`,
-            `.us-${cleanCode}`,
-            `[class*="us-${cleanCode}"]`,
-            `[data-id="${cleanCode.toUpperCase()}"]`,
-            `[data-id="${cleanCode}"]`
-          ];
-          
-          let el = null;
-          for (const selector of permutations) {
-            el = mapContainer.querySelector(selector);
-            if (el) break;
-          }
-          
-          if (el) {
-            el.classList.add('visited');
-            el.setAttribute('fill', '#37352f');
-            el.style.setProperty('fill', '#37352f', 'important');
-            el.dataset.label = `USA - ${name}`;
-            
-            if (el.tagName === 'g') {
-              el.querySelectorAll('path, polygon').forEach(p => {
-                p.classList.add('visited');
-                p.setAttribute('fill', '#37352f');
-                p.style.setProperty('fill', '#37352f', 'important');
-                p.dataset.label = `USA - ${name}`;
-              });
-            }
-          } else {
-            const fallbackElements = mapContainer.querySelectorAll(`[class*="us-${cleanCode}"], [class*="US-${cleanCode.toUpperCase()}"]`);
-            fallbackElements.forEach(fEl => {
-              fEl.classList.add('visited');
-              fEl.setAttribute('fill', '#37352f');
-              fEl.style.setProperty('fill', '#37352f', 'important');
-              fEl.dataset.label = `USA - ${name}`;
-            });
-          }
-        });
-
-        // 3. THE SUPREME VISUAL DOMINANCE RESILIENT BINDING PIPELINE LOOP ROUTINE:
-        // Fetches an unbroken raw live list arrays stack of all path nodes elements tags directly via performance native DOM method 
-        // getElementsByTagName('path'), loops through them via high speed counter index 'i', extracts the raw text string fields cased attributes 
-        // values for class and id attributes, and checks them directly using text substring methods (.includes)!
-        // Scopes and forcefully injects three combined layers of highlights fills paints onto the matching path cells nodes instantly, 
-        // completely bypassing all browser engine selector parsing glitches, cross-origin constraints or title stripping traps universally live!
-        visitedStates.forEach(({ code, name }) => {
-          const cleanCode = code.toLowerCase().trim();
-          const pathsList = mapContainer.getElementsByTagName('path');
-          for (let i = 0; i < pathsList.length; i++) {
-            const pNode = pathsList[i];
-            const classAttr = pNode.getAttribute('class') || '';
-            const idAttr = pNode.getAttribute('id') || '';
-            
-            if (classAttr.includes('us-' + cleanCode) || 
-                classAttr.includes('US-' + cleanCode.toUpperCase()) || 
-                idAttr.includes('us-' + cleanCode) ||
-                idAttr.includes('US-' + cleanCode.toUpperCase())) {
-              
-              pNode.classList.add('visited');
-              pNode.setAttribute('fill', '#37352f');
-              pNode.style.fill = '#37352f';
-              pNode.style.setProperty('fill', '#37352f', 'important');
-              pNode.dataset.label = `USA - ${name}`;
-            }
-          }
-        });
-
-        // 4. Recursive text title fallback checking matrix channel loader 
-        visitedStates.forEach(({ name }) => {
-          const allPaths = mapContainer.querySelectorAll('path, polygon');
-          allPaths.forEach(p => {
-            const titleNode = p.querySelector('title');
-            if (titleNode && titleNode.textContent.trim().toLowerCase() === name.toLowerCase().trim()) {
+        countries.forEach(({ code, name }) => {
+          const el = worldSlot.querySelector(`#${code.toLowerCase()}`);
+          if (!el) return;
+          if (el.tagName === 'g') {
+            el.querySelectorAll('path, polygon').forEach(p => {
               p.classList.add('visited');
-              p.setAttribute('fill', '#37352f');
-              p.style.fill = '#37352f';
-              p.style.setProperty('fill', '#37352f', 'important');
-              p.dataset.label = `USA - ${name}`;
-            }
+              p.dataset.country = name;
+            });
+          } else {
+            el.classList.add('visited');
+            el.dataset.country = name;
+          }
+        });
+
+        setupTooltipListeners(worldSlot, '[data-country]', h => h.dataset.country);
+      });
+
+    // ROUTINE 2: Initialize and Render Interactive Scoped USA States Map Graphic
+    const usaSlot = document.getElementById('usa-map-slot');
+    fetch('usa-states-map.svg')
+      .then(r => r.text())
+      .then(svg => {
+        usaSlot.innerHTML = svg;
+        
+        states.forEach(({ code, name }) => {
+          // Select path items matching Wikimedia standard class targets vectors shapes
+          const elements = usaSlot.querySelectorAll(`.${code.toLowerCase()}`);
+          elements.forEach(el => {
+            el.classList.add('visited');
+            el.dataset.state = name;
           });
         });
 
-        // Interactive pointer tracking context tooltip position scanner overlay descriptors parameters label listener loops routines strings
-        mapContainer.addEventListener('mousemove', e => {
-          let target = e.target.closest('.visited');
-          
-          // Fallback tracker parser checks metrics data properties checking patterns metrics configurations 
-          if (!target && e.target.className && e.target.className.baseVal) {
-            const cList = e.target.className.baseVal.split(' ');
-            const stateClass = cList.find(c => c.startsWith('us-') && c !== 'us-');
-            if (stateClass) {
-              const code = stateClass.replace('us-', '');
-              if (visitedStates.some(s => s.code === code)) {
-                target = e.target;
-              }
-            }
-          }
-          if (!target && e.target.id) {
-            const idL = e.target.id.toLowerCase();
-            if (idL.startsWith('us-')) {
-              const code = idL.replace('us-', '');
-              if (visitedStates.some(s => s.code === code)) {
-                target = e.target;
-              }
-            }
-          }
-
-          if (target) {
-            if (target.dataset.label) {
-              tip.textContent = target.dataset.label;
-            } else {
-              let codeStr = '';
-              if (target.id) codeStr = target.id.toLowerCase().replace('us-', '');
-              if (!codeStr && target.className && target.className.baseVal) {
-                const stateC = target.className.baseVal.split(' ').find(c => c.startsWith('us-') && c !== 'us-');
-                if (stateC) codeStr = stateC.replace('us-', '');
-              }
-              const matchedState = visitedStates.find(s => s.code === codeStr.toLowerCase());
-              if (matchedState) {
-                tip.textContent = `USA - ${matchedState.name}`;
-                target.dataset.label = `USA - ${matchedState.name}`;
-              }
-            }
-            tip.classList.add('visible');
-            tip.style.left = e.clientX + 12 + 'px';
-            tip.style.top = e.clientY - 28 + 'px';
-          } else {
-            tip.classList.remove('visible');
-          }
-        });
-
-        mapContainer.addEventListener('mouseleave', () => {
-          tip.classList.remove('visible');
-        });
+        setupTooltipListeners(usaSlot, '[data-state]', h => `USA - ${h.dataset.state}`);
       });
+
+    // Unified tooltips event bounding coordinator pipeline loop listener handles matrix
+    function setupTooltipListeners(container, selector, labelExtractor) {
+      container.addEventListener('mousemove', e => {
+        const target = e.target.closest(selector);
+        if (target && target.classList.contains('visited')) {
+          tooltip.textContent = labelExtractor(target);
+          tooltip.classList.add('visible');
+          tooltip.style.left = e.clientX + 12 + 'px';
+          tooltip.style.top = e.clientY - 28 + 'px';
+        } else {
+          tooltip.classList.remove('visible');
+        }
+      });
+      container.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+      });
+    }
   </script>
 </body>
 </html>
