@@ -152,7 +152,7 @@
  *
  */
 /* DEFINITIVE FAIL-SAFE PRE-SHADED VECTOR LAND DATA OVERRIDES */
-.de, .is, .at, .ie, .no, .dk, .it, .pe, .co, .ec, .pa, .cr, .in, .il, .fr, .es, .cy, .gb, .cn, .jp, .pl, .cz, .mx, .li, .ch, .nl, .pt, .hr, .pr,
+.de, .is, .at, .ie, #path6794, .dk, .it, .pe, .co, .ec, .pa, .cr, .in, .il, .fr, .es, .cy, .gb, .cn, .jp, .pl, .cz, .mx, .li, .ch, .nl, .pt, .hr, .pr,
 #us-fl, #us-il, #us-in, #us-mi, #us-oh, #us-ny, #us-ca, #us-nv, #us-ut, #us-az, #us-wy, #us-co, #us-ne, #us-ia, #us-tx, #us-hi,
 .us-fl, .us-il, .us-in, .us-mi, .us-oh, .us-ny, .us-ca, .us-nv, .us-ut, .us-az, .us-wy, .us-co, .us-ne, .us-ia, .us-tx, .us-hi {
    fill: #37352f !important;

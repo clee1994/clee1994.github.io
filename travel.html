@@ -247,8 +247,12 @@
           const lowCode = code.toLowerCase().trim();
           if (lowCode === 'us' || lowCode === 'usa') return;
           
-          const nodes = mapSlot.querySelectorAll(`#${lowCode}, .${lowCode}`);
+          // Intercept Norway to target exclusively the single mainland outline vector path node cell!
+          const nodes = lowCode === 'no' 
+            ? [mapSlot.querySelector('#path6794')] 
+            : mapSlot.querySelectorAll(`#${lowCode}, .${lowCode}`);
           nodes.forEach(n => {
+            if (!n) return;
             if (n.tagName === 'g') {
               n.querySelectorAll('path, polygon').forEach(p => {
                 p.classList.add('shaded-visited');
