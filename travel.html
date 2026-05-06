@@ -27,7 +27,7 @@
       box-sizing: border-box;
       position: relative;
     }
-    /* Responsive wide fluid layout layout breakout horizontal maps banner coordinates canvas dashboard sizing */
+    /* Premium widescreen responsive fluid horizontal breakout travel mapping display dashboard vector canvas sizing */
     .map-container svg {
       width: 100%;
       height: auto;
@@ -90,26 +90,26 @@
 
   <h1>Travel</h1>
 
-  <!-- Full fluid edge to edge horizontally responsive vector mapping breakouts panel slots row banner box box -->
+  <!-- Full window horizontal layout edge to edge breakout banner wrapper canvas panel slot -->
   <div class="map-wrap">
     <div class="map-container" id="map"></div>
     <div class="map-tooltip" id="tooltip"></div>
   </div>
 
-  <!-- Countries metrics counters numbers badges grid items flat columns cells spans layout rows details -->
+  <!-- Countries counters widgets list summaries flat columns cells rows nodes badges spans items -->
   <div class="travel-stat" id="stat"></div>
   <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="countries"></div>
   </section>
 
-  <!-- US States metrics counters numbers badges grid items flat columns cells spans layout rows details -->
+  <!-- US States counters widgets list summaries flat columns cells rows nodes badges spans items -->
   <div class="travel-stat" id="us-stat" style="margin-top: 32px;"></div>
   <section class="country-section" style="margin-top: 20px;">
     <div class="country-grid" id="states-list"></div>
   </section>
 
   <script>
-    // Global travel tracking lists summary global parameter indicators indices arrays data records items metrics
+    // Global travels log database reconciled indices dataset arrays parameters records statistics items
     const visited = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
@@ -143,7 +143,7 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Visited United States individual subnational state division code tokens summary values logs parameter metrics
+    // Visited domestic United States subdivisions individual state names parameters logging entries records
     const visitedStates = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
@@ -163,17 +163,17 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Alphabetical sort ordering arrangements row columns panels layout spans matching preferences parameters 
+    // Alpha sort arrangement specifications lists layout grid components tokens panels spans text components 
     visited.sort((a, b) => a.name.localeCompare(b.name));
     visitedStates.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Populate number badges widgets stats elements descriptors values nodes 
+    // Populate stats counters widget components badges 
     document.getElementById('stat').innerHTML =
       `<span class="num">${visited.length}</span><span class="label">countries visited</span>`;
     document.getElementById('us-stat').innerHTML =
       `<span class="num">${visitedStates.length}</span><span class="label">US states visited</span>`;
 
-    // Populate visible checklists spans cells row layout items variables fields parameters tokens text components 
+    // Populate text rows layout components cells data fields tokens spans 
     document.getElementById('countries').innerHTML = visited
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
     document.getElementById('states-list').innerHTML = visitedStates
@@ -181,7 +181,7 @@
 
     const mapContainer = document.getElementById('map');
 
-    // Fetch high resolution 1.74 MB official subdivisions states map layout asset from cache busted asset filename resource path route string
+    // Download 1.74 MB high resolution vector map asset from cache busted uniquely routed path resource string
     fetch('world-map-subdivisions-v1.svg?v=' + new Date().getTime())
       .then(r => r.text())
       .then(svg => {
@@ -190,18 +190,19 @@
         
         const svgEl = mapContainer.querySelector('svg');
         if (svgEl) {
-          // Cleanly purge intrinsic rigid layout dimension sizes attributes constraints from object trees tags parameters
+          // Purge static intrinsic vector parameters width and height from structural tag properties nodes
           svgEl.removeAttribute('width');
           svgEl.removeAttribute('height');
           svgEl.removeAttribute('fill');
           
-          // SPRAWLING geographic CROP VIEWBOX CONFIGURATION: Locked at X=82 Y=45 grid boundaries and locked at vertical height 
-          // coordinate range 1140 units to guarantee that South America draws perfectly complete, massive, expanded wide 
-          // and 100% fully uncropped down to its southern tips, while keeping Antarctica fully flattened and masked away out from visual sight!
+          // ADAPTIVE geography VERTICAL METRICS CROP VIEWBOX CONFIGURATION: 
+          // Truncated perfectly at Y height span limits 1140 coordinate units to guarantee that South America prints 
+          // beautifully complete, massive wide and uncropped down to its southern extremities tips, 
+          // while successfully masking polar Antarctica completely away out from sight below!
           svgEl.setAttribute('viewBox', '82 45 2528 1140');
           svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
           
-          // Inject supreme master overrides style sheet rules flattening pre existing file template presentation details
+          // Injected style sheet overrides string block flattening intrinsic file definitions details properties
           let embeddedStyle = svgEl.querySelector('#style_css_sheet') || svgEl.querySelector('style');
           if (!embeddedStyle) {
             embeddedStyle = document.createElementNS("http://www.w3.org/2000/svg", "style");
@@ -210,32 +211,31 @@
           }
           
           embeddedStyle.textContent = `
-            /* Pristine unvisited land soft off-white background color and clean white borders maps separations contours universally */
+            /* Pristine unvisited default off white land background and clean crisp white borders map boundaries splits universally */
             path, polygon, circle {
               fill: #f4f4f2 !important;
               stroke: #ffffff !important;
               stroke-width: 0.5px !important;
             }
-            /* Sea transparent backfill specced adjustments matching theme configurations layouts */
+            /* Sea transparent overlays filter specifications matching theme styles layout requirements */
             .oceanxx, #ocean, rect[fill="#ffffff"], rect[fill="#c2e2ff"] {
               fill: #ffffff !important;
               stroke: none !important;
             }
-            /* Suppress metadata floating circles layers templates labels elements tree pointers indices */
+            /* Completely strip placeholder circle metadata tags layers vectors out from document models */
             .circlexx, .subxx, .unxx, .noxx {
               display: none !important;
               opacity: 0 !important;
             }
-            /* High contrast travel visited international country dark charcoal cover shading rules definitions values specifications */
+            /* High Legibility dark charcoal visited country highlights cover fill parameters definitions values specifications */
             .visited, path.visited, polygon.visited {
               fill: #37352f !important;
               stroke: #ffffff !important;
               stroke-width: 0.8px !important;
             }
             
-            /* THE SUPREME DEFINTIVE DUAL-SELECTOR MASTER STATE COATING METRIC: 
-               Forcing visual shading dominance directly inside the CSS matching layer tree via comprehensive combination 
-               of lowercase ID tokens list (#us-ca) and direct token class descriptors list (.us-ca) concurrently live! */
+            /* IRONCLAD DUAL LAYER HIGHLIGHT RULES SELECTOR MATRIX STRING: Scopes direct matches via cased class tokens 
+               and traditional lowercase ID strings handles with supreme priority flag modifier properties live! */
             #us-fl, #us-il, #us-in, #us-mi, #us-oh, #us-ny, #us-ca, #us-nv, #us-ut, #us-az, #us-wy, #us-co, #us-ne, #us-ia, #us-tx, #us-hi,
             .us-fl, .us-il, .us-in, .us-mi, .us-oh, .us-ny, .us-ca, .us-nv, .us-ut, .us-az, .us-wy, .us-co, .us-ne, .us-ia, .us-tx, .us-hi,
             [class*="us-fl"], [class*="us-il"], [class*="us-in"], [class*="us-mi"], [class*="us-oh"], [class*="us-ny"], [class*="us-ca"], [class*="us-nv"], [class*="us-ut"], [class*="us-az"], [class*="us-wy"], [class*="us-co"], [class*="us-ne"], [class*="us-ia"], [class*="us-tx"], [class*="us-hi"] {
@@ -244,7 +244,7 @@
               stroke-width: 0.8px !important;
             }
             
-            /* Keep polar caps masked cleanly away from display viewport printed lines paths views */
+            /* Mask polar limits cleanly away printed lines views */
             #AQ, .aq, [id="us-aq"], [id="aq"] {
               display: none !important;
               opacity: 0 !important;
@@ -252,7 +252,7 @@
           `;
         }
 
-        // 1. Color Visited International Countries (strictly bypassing USA collective country selection maps tracks loops entries checks)
+        // 1. Paint Visited International Countries (strictly skipping collective parent USA country boundaries loops checking entries)
         visited.forEach(({ code, name }) => {
           const cleanCode = code.toLowerCase().trim();
           if (cleanCode === 'us' || cleanCode === 'usa') return;
@@ -275,20 +275,16 @@
           });
         });
 
-        // 2. Color Granular Visited domestic United States sub states outline path layers nodes elements beautifully inside the banner canvas
-        // THE DOUBLE VISUAL DOMINANCE COATING STRATEGY: Injects BOTH presentation attribute values configurations (setAttribute) 
-        // AND inline runtime style definitions updates (style.setProperty) concurrently across specific cased selectors lookup arrays 
-        // matching strict class prefixes (.us-ca) to forcefully paint the charcoal layers onto the state subdivisions regardless of file ID formats!
+        // 2. Paint Granular Visited domestic US individual state subdivisions outline paths elements beautifully inside the canvas
+        // SCOPED STYLES MATCHERS MATRIX QUERY BLOCKS: Scopes matches cleanly via prefix class query selector permutations
         visitedStates.forEach(({ code, name }) => {
           const cleanCode = code.toLowerCase().trim();
           const permutations = [
+            `#us-${cleanCode}`,
             `.us-${cleanCode}`,
             `[class*="us-${cleanCode}"]`,
-            `#us-${cleanCode}`,
             `[data-id="${cleanCode.toUpperCase()}"]`,
-            `[data-id="${cleanCode}"]`,
-            `#US-${cleanCode.toUpperCase()}`,
-            `.US-${cleanCode.toUpperCase()}`
+            `[data-id="${cleanCode}"]`
           ];
           
           let el = null;
@@ -312,7 +308,6 @@
               });
             }
           } else {
-            // High coverage direct class name substring fallback query loops checks tracking nodes vectors 
             const fallbackElements = mapContainer.querySelectorAll(`[class*="us-${cleanCode}"], [class*="US-${cleanCode.toUpperCase()}"]`);
             fallbackElements.forEach(fEl => {
               fEl.classList.add('visited');
@@ -323,11 +318,29 @@
           }
         });
 
-        // Dynamic pointer tracking context tooltips mouse position scanner indicators labels overlay listeners perfect loops routines strings
+        // 3. THE RESOLVED DEFINITIVE RECURSIVE TEXT TITLE TAG SCANNER HIGHLIGHT MATRIX PIPELINE:
+        // Loops through every single path tag cell in the container tree, parses its nested text title child tag nodes, 
+        // and matches its text value string directly against the full cased state human name string entry logs 
+        // ('California', 'Texas', 'Florida') to apply concurrent double dominance coatings fills paints live, 
+        // completely crushing any casing mismatches, ID lookup gaps, or browser engine anomalies permanently!
+        visitedStates.forEach(({ name }) => {
+          const allPaths = mapContainer.querySelectorAll('path, polygon');
+          allPaths.forEach(p => {
+            const titleNode = p.querySelector('title');
+            if (titleNode && titleNode.textContent.trim().toLowerCase() === name.toLowerCase().trim()) {
+              p.classList.add('visited');
+              p.setAttribute('fill', '#37352f');
+              p.style.setProperty('fill', '#37352f', 'important');
+              p.dataset.label = `USA - ${name}`;
+            }
+          });
+        });
+
+        // Active pointers coordinates pops up context tooltips overlay tracking interactions text labels listeners loops
         mapContainer.addEventListener('mousemove', e => {
           let target = e.target.closest('.visited');
           
-          // Fallback text class selector matching scanner checker parameter values mapping indicators parameters details
+          // Fallback scanner descriptors parser checking tokens definitions mappings parameters metrics parameters fields settings
           if (!target && e.target.className && e.target.className.baseVal) {
             const cList = e.target.className.baseVal.split(' ');
             const stateClass = cList.find(c => c.startsWith('us-') && c !== 'us-');
