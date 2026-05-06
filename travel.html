@@ -6,61 +6,34 @@
   <title>Travel – Clemens JS Schaefer</title>
   <link rel="stylesheet" href="style.css?v=1" />
   <style>
+    /* Large breakout fluid horizonal horizontally wide baner display container configurations */
     .map-wrap {
       margin-top: 32px;
       position: relative;
+      width: 100vw;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      background: #ffffff;
+      border-top: 1px solid #f1f1ef;
+      border-bottom: 1px solid #f1f1ef;
+      padding: 16px 0;
+      overflow: hidden;
     }
     .map-container {
-      width: calc(100% + 48px);
-      margin-left: -24px;
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
       position: relative;
     }
     .map-container svg {
       width: 100%;
       height: auto;
       display: block;
-    }
-    .map-container svg path,
-    .map-container svg polygon {
-      fill: #f1f1ef;
-      stroke: #fff;
-      stroke-width: 0.4;
-      transition: fill 0.2s ease;
-    }
-    .map-container svg .visited {
-      fill: #37352f;
-      cursor: pointer;
-    }
-    .map-container svg .visited:hover {
-      fill: #787774;
-    }
-
-    /* Dedicated US Map styles */
-    .usa-map-wrap {
-      margin-top: 24px;
-      position: relative;
-      border: 1px solid #f1f1ef;
-      border-radius: 6px;
-      padding: 12px;
-      background: #fafafa;
-    }
-    .usa-map-container svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .usa-map-container svg path {
-      fill: #e9e9e6;
-      stroke: #fff;
-      stroke-width: 1;
-      transition: fill 0.2s ease;
-    }
-    .usa-map-container svg .visited {
-      fill: #37352f;
-      cursor: pointer;
-    }
-    .usa-map-container svg .visited:hover {
-      fill: #787774;
+      background: #ffffff;
     }
 
     .map-tooltip {
@@ -73,13 +46,13 @@
       border-radius: 4px;
       opacity: 0;
       transition: opacity 0.1s ease;
-      z-index: 50;
+      z-index: 100;
       white-space: nowrap;
     }
     .map-tooltip.visible { opacity: 1; }
 
     .travel-stat {
-      margin-top: 32px;
+      margin-top: 40px;
       display: flex;
       align-items: baseline;
       gap: 8px;
@@ -123,39 +96,33 @@
 
   <h1>Travel</h1>
 
-  <!-- WORLD SECTION -->
+  <!-- MASTER UNIFIED VERTEX CANVASBreakout full width horizonal container layout -->
   <div class="map-wrap">
-    <div class="map-container" id="world-map-slot"></div>
+    <div class="map-container" id="master-map-slot"></div>
+    <div class="map-tooltip" id="master-tooltip"></div>
   </div>
 
+  <!-- TEXT BREAKDOWN SECTION 1: COUNTRIES VISITED -->
   <div class="travel-stat">
-    <span class="num" id="world-counter">0</span>
+    <span class="num" id="countries-counter">0</span>
     <span class="label">Countries Visited</span>
   </div>
-  
   <section class="country-section">
-    <div class="country-grid" id="countries-grid"></div>
+    <div class="country-grid" id="countries-list-slot"></div>
   </section>
 
-  <!-- US STATES SECTION -->
-  <div class="travel-stat" style="margin-top: 56px;">
-    <span class="num" id="usa-counter">0</span>
+  <!-- TEXT BREAKDOWN SECTION 2: US STATES VISITED -->
+  <div class="travel-stat" style="margin-top: 48px;">
+    <span class="num" id="states-counter">0</span>
     <span class="label">US States Visited</span>
   </div>
-
-  <div class="usa-map-wrap">
-    <div class="usa-map-container" id="usa-map-slot"></div>
-  </div>
-
   <section class="country-section">
-    <div class="country-grid" id="states-grid"></div>
+    <div class="country-grid" id="states-list-slot"></div>
   </section>
 
-  <div class="map-tooltip" id="global-tooltip"></div>
-
   <script>
-    // Reconciled True International Countries List View (Includes USA 2016 unified parent node)
-    const countries = [
+    // Reconciled True International Countries Dataset (Includes unified United States 2016 entry node)
+    const visitedCountries = [
       { name: 'Germany', code: 'de', year: 1994 },
       { name: 'Iceland', code: 'is', year: 2007 },
       { name: 'Austria', code: 'at', year: 2008 },
@@ -188,8 +155,8 @@
       { name: 'Puerto Rico', code: 'pr', year: 2022 }
     ];
 
-    // Granular Breakdown dataset logging explicit US domestic sub states visits
-    const states = [
+    // Granular sub national US states tracking logs dataset parameters list array
+    const visitedStates = [
       { name: 'Florida', code: 'fl', year: 2016 },
       { name: 'Illinois', code: 'il', year: 2018 },
       { name: 'Indiana', code: 'in', year: 2018 },
@@ -208,82 +175,132 @@
       { name: 'Hawaii', code: 'hi', year: 2024 }
     ];
 
-    // Alphabetize lists for clean tabular grid displays panel output 
-    countries.sort((a, b) => a.name.localeCompare(b.name));
-    states.sort((a, b) => a.name.localeCompare(b.name));
+    // Alphabetize lists formatting structures grids inputs panels 
+    visitedCountries.sort((a, b) => a.name.localeCompare(b.name));
+    visitedStates.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Update Counters Text elements
-    document.getElementById('world-counter').textContent = countries.length;
-    document.getElementById('usa-counter').textContent = states.length;
+    // Update display number indicators text slots metrics 
+    document.getElementById('countries-counter').textContent = visitedCountries.length;
+    document.getElementById('states-counter').textContent = visitedStates.length;
 
-    // Populate Layout Grid cells 
-    document.getElementById('countries-grid').innerHTML = countries
+    // Render alphabetic listings grids column slots templates strings
+    document.getElementById('countries-list-slot').innerHTML = visitedCountries
       .map(c => `<span>${c.name} (${c.year})</span>`).join('');
-    document.getElementById('states-grid').innerHTML = states
+    document.getElementById('states-list-slot').innerHTML = visitedStates
       .map(s => `<span>${s.name} (${s.year})</span>`).join('');
 
-    const tooltip = document.getElementById('global-tooltip');
+    const mapSlot = document.getElementById('master-map-slot');
+    const tooltip = document.getElementById('master-tooltip');
 
-    // ROUTINE 1: Initialize and Render Interactive World Map Graphic
-    const worldSlot = document.getElementById('world-map-slot');
-    fetch('world-map.svg')
+    // Load the master subdivisions integrated map file asset 
+    fetch('world-map-subdivisions-v1.svg')
       .then(r => r.text())
       .then(svg => {
-        worldSlot.innerHTML = svg;
+        mapSlot.innerHTML = svg;
         
-        countries.forEach(({ code, name }) => {
-          const el = worldSlot.querySelector(`#${code.toLowerCase()}`);
-          if (!el) return;
-          if (el.tagName === 'g') {
-            el.querySelectorAll('path, polygon').forEach(p => {
-              p.classList.add('visited');
-              p.dataset.country = name;
-            });
-          } else {
-            el.classList.add('visited');
-            el.dataset.country = name;
+        const svgEl = mapSlot.querySelector('svg');
+        if (svgEl) {
+          // Strip dimension strict locks cleanly from headers parameters
+          svgEl.removeAttribute('width');
+          svgEl.removeAttribute('height');
+          svgEl.removeAttribute('fill');
+          
+          // Definitive Robinson horizontally centered breakout wide projection coordinates Viewbox configurations
+          svgEl.setAttribute('viewBox', '82 45 2528 1140');
+          svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          
+          // Inject supreme dynamic override stylesheet rules into map frame
+          let customStyle = svgEl.querySelector('style');
+          if (!customStyle) {
+            customStyle = document.createElementNS("http://www.w3.org/2000/svg", "style");
+            svgEl.insertBefore(customStyle, svgEl.firstChild);
           }
-        });
+          
+          customStyle.textContent = `
+            /* Set unvisited land paths to a beautifully balanced soft gray background for superb visibility */
+            path, polygon, circle {
+              fill: #eaeaea !important;
+              stroke: #ffffff !important;
+              stroke-width: 0.4px !important;
+            }
+            /* FORCE OCEANS COMPLETELY WHITE TO MATCH SITE BACKGROUND (No border lines) */
+            .oceanxx, #ocean, path[class="oceanxx"], #svg2985 #ocean {
+              fill: #ffffff !important;
+              stroke: none !important;
+            }
+            /* Hide cap metadata tags nodes boundaries frames completely out from render chains */
+            .circlexx, .subxx, .unxx, .noxx, #AQ, .aq {
+              display: none !important;
+              opacity: 0 !important;
+            }
+            /* Visited premium dark charcoal highlights overrides configurations live priority presets values */
+            .shaded-visited {
+              fill: #37352f !important;
+              stroke: #ffffff !important;
+              stroke-width: 0.6px !important;
+            }
+          `;
+        }
 
-        setupTooltipListeners(worldSlot, '[data-country]', h => h.dataset.country);
-      });
-
-    // ROUTINE 2: Initialize and Render Interactive Scoped USA States Map Graphic
-    const usaSlot = document.getElementById('usa-map-slot');
-    fetch('usa-states-map.svg')
-      .then(r => r.text())
-      .then(svg => {
-        usaSlot.innerHTML = svg;
-        
-        states.forEach(({ code, name }) => {
-          // Select path items matching Wikimedia standard class targets vectors shapes
-          const elements = usaSlot.querySelectorAll(`.${code.toLowerCase()}`);
-          elements.forEach(el => {
-            el.classList.add('visited');
-            el.dataset.state = name;
+        // 1. Highlight Reconciled Visited International Countries (Skips generic USA node to prevent full blind fill)
+        visitedCountries.forEach(({ code, name }) => {
+          const lowCode = code.toLowerCase().trim();
+          if (lowCode === 'us' || lowCode === 'usa') return;
+          
+          const nodes = mapSlot.querySelectorAll(`#${lowCode}, .${lowCode}`);
+          nodes.forEach(n => {
+            if (n.tagName === 'g') {
+              n.querySelectorAll('path, polygon').forEach(p => {
+                p.classList.add('shaded-visited');
+                p.dataset.label = name;
+              });
+            } else {
+              n.classList.add('shaded-visited');
+              n.dataset.label = name;
+            }
           });
         });
 
-        setupTooltipListeners(usaSlot, '[data-state]', h => `USA - ${h.dataset.state}`);
-      });
+        // 2. Highlight Integrated Granular Domestic United States Subdivisions States paths directly inside world view canvas!
+        visitedStates.forEach(({ code, name }) => {
+          const lowCode = code.toLowerCase().trim();
+          // Wikipedia/Wikimedia master subdivisions configuration path pattern ID handles target lookup matrix
+          const stateEl = mapSlot.querySelector(`#us-${lowCode}`);
+          if (stateEl) {
+            stateEl.classList.add('shaded-visited');
+            stateEl.dataset.label = `USA - ${name}`;
+            if (stateEl.tagName === 'g') {
+              stateEl.querySelectorAll('path, polygon').forEach(p => {
+                p.classList.add('shaded-visited');
+                p.dataset.label = `USA - ${name}`;
+              });
+            }
+          } else {
+            // Fallback class selector checker strings matches
+            const fallbackNodes = mapSlot.querySelectorAll(`.us-${lowCode}, [class*="us-${lowCode}"]`);
+            fallbackNodes.forEach(fn => {
+              fn.classList.add('shaded-visited');
+              fn.dataset.label = `USA - ${name}`;
+            });
+          }
+        });
 
-    // Unified tooltips event bounding coordinator pipeline loop listener handles matrix
-    function setupTooltipListeners(container, selector, labelExtractor) {
-      container.addEventListener('mousemove', e => {
-        const target = e.target.closest(selector);
-        if (target && target.classList.contains('visited')) {
-          tooltip.textContent = labelExtractor(target);
-          tooltip.classList.add('visible');
-          tooltip.style.left = e.clientX + 12 + 'px';
-          tooltip.style.top = e.clientY - 28 + 'px';
-        } else {
+        // Initialize interactive tracker listeners tools overlay hover definitions routines positions matrix pointer tracking handlers
+        mapSlot.addEventListener('mousemove', e => {
+          const target = e.target.closest('.shaded-visited');
+          if (target && target.dataset.label) {
+            tooltip.textContent = target.dataset.label;
+            tooltip.classList.add('visible');
+            tooltip.style.left = e.clientX + 12 + 'px';
+            tooltip.style.top = e.clientY - 28 + 'px';
+          } else {
+            tooltip.classList.remove('visible');
+          }
+        });
+        mapSlot.addEventListener('mouseleave', () => {
           tooltip.classList.remove('visible');
-        }
+        });
       });
-      container.addEventListener('mouseleave', () => {
-        tooltip.classList.remove('visible');
-      });
-    }
   </script>
 </body>
 </html>
